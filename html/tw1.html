@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <title>TW1</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss-animate@1.0.7/dist/index.umd.js"></script>
+    <style type="text/tailwindcss">
+      @custom-variant dark (&:is(.dark *));
+
+      @theme {
+        --color-clifford: #da373d;
+      }
+
+      @layer base {
+        button {
+          @apply border border-green-500 bg-green-300 px-2 rounded-md cursor-pointer hover:bg-green-400 hover:text-white active:ring-2 active:scale-105;
+        }
+      }
+
+      @layer utility {
+        .btn {
+          background-color: skyblue;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="h-screen bg-green-200 grid place-items-center">
+    <div>
+
+    <div
+      class="flex flex-col md:flex-row [&>button]:shadow-md [&>button]:hover:shadow-xl my-10 gap-2"
+    >
+      <button>Button</button>
+      <button class="btn text-white group-hover:border-black">Button</button>
+      <button class="btn text-white dark:text-white">Button</button>
+    </div>
+
+    <h1
+      class="text-3xl font-bold underline text-clifford animate-bounce text-center"
+    >
+      Hello world!
+    </h1>
+    <div class="border my-10 pl-3 text-red-500">Div</div>
+
+
+    <div class="group container flex gap-2 bg-white rounded-md p-2 shadow-md w-80" draggable="true">
+        <img
+          id="ix"
+          src="https://avatar.vercel.sh/s"
+          alt="Profile Image"
+          class="rounded-full size-16"
+        />
+        <div class="[&>small]:block [&>div]:text-gray-500">
+          <div>seonu.kim.kr@gmail.com</div>
+          <small>descript...111</small>
+          <small>descript...222</small>
+        </div>
+      </div>
+      <!-- FormData.set('id', 'a@gmail.com') -->
+      <form method="POST" action="server_fn()">
+        <input type="text" name="id" placeholder="a@gmail.com" />
+        <input type="password," name="pw" />
+        <button type="reset">Cancel</button>
+        <button type="submit">SignIn</button>
+      </form>
+    </div>
+    </div>
+  </body>
+</html>

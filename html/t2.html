@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta og:title="" />
+    <title>first HTML</title>
+    <style>
+      header,
+      nav,
+      footer,
+      aside {
+        border: 1px solid #999;
+        border: 1px solid green;
+        padding: 10px;
+        margin: 5px;
+      }
+
+      nav {
+        margin: 5px 20px 45px;
+        padding: 50px;
+        border: 1px solid #999;
+        border-radius: 50px;
+      }
+
+      main {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+
+      img {
+        max-width: 50%;
+      }
+
+      figure {
+        margin-left: auto;
+        /* 높이가 동일해짐 */
+        display: inline-flex;
+        justify-content: space-between;
+        border: 5px solid green;
+      }
+
+      aside {
+        height: 50vh;
+        display: flex;
+        /* vertical-align: middle; */
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+      h3 {
+        font-size: 1.2rem;
+      }
+      .container {
+        align-items: start;
+        border: 2px dotted;
+        border-color: blue;
+        margin: 10px;
+        background-color: yellow;
+      }
+
+      .dot-red {
+        border: 2px dotted red;
+      }
+
+      img:not(.x) {
+        margin-left: 15px;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>header</header>
+    <nav>nav</nav>
+    <main style="border: 1px solid red; padding: 5px">
+      <div class="container">
+        <h1>main > container</h1>
+        <section>section</section>
+        <article style="font-size: 2rem">
+          <h3 style="font-size: 1.2rem">article - h3 title</h3>
+          <figure>
+            <img
+              style="border: 5px solid red"
+              src="https://avatar.vercel.sh/s"
+              alt="S"
+              class="x"
+            />
+            <img
+              class="dot-red"
+              src="https://unsplash.com/photos/b51xWeb75R4/download?ixid=M3wxMjA3fDB8MXxhbGx8M3x8fHx8fHx8MTc2MTg3OTc1M3w&force=true"
+              alt="lion"
+            />
+          </figure>
+        </article>
+      </div>
+      <aside style="align-items: center">aside</aside>
+    </main>
+    <footer class="text-center"><b>&#169; 시니어코딩</b></footer>
+  </body>
+</html>

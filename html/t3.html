@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>T3</title>
+    <style></style>
+    <link rel="stylesheet" href="t3.css" />
+  </head>
+
+  <body>
+    <div class="border">
+      <div class="container" draggable="true">
+        <img
+          id="ix"
+          src="https://avatar.vercel.sh/s"
+          alt="Profile Image"
+          style="width: 50px; border-radius: 100%"
+        />
+        <div>
+          <div>seonu.kim.kr@gmail.com</div>
+          <small>descript...111</small>
+          <small>descript...222</small>
+        </div>
+      </div>
+      <!-- FormData.set('id', 'a@gmail.com') -->
+      <form method="POST" action="server_fn()">
+        <input type="text" name="id" placeholder="a@gmail.com" />
+        <input type="password," name="pw" />
+        <button type="reset">Cancel</button>
+        <button type="submit">SignIn</button>
+      </form>
+    </div>
+  </body>
+</html>
