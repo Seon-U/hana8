@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Timer</title>
+  </head>
+  <body>
+    <div id="time">00:00.000</div>
+    <button id="btn">START</button>
+    <script>
+      let msec = 0;
+      const $btn = document.getElementById("btn");
+      const $time = document.getElementById("time");
+      let intl;
+
+      function timeConverter(ms) {
+        if (ms < 1000) return ms;
+        if (ms < 60000) return ms / 1000;
+        return `${ms / 1000 / 60} : ${(ms / 1000) % 60}. ${ms % 1000}`;
+      }
+
+      console.log(msec);
+      function setTimer() {
+        if ($btn.hasAttribute("isStart")) {
+          intl = setInterval(() => {
+            msec++;
+            console.log("🚀 ~ msec:", msec);
+            $time.innerHTML = timeConverter(++msec);
+          }, 1);
+        } else {
+          clearInterval(intl);
+          msec = 0;
+          $time.innerHTML = msec;
+        }
+      }
+
+      let timer;
+      $btn.addEventListener("click", function () {
+        // setTimer();
+        // $btn.toggleAttribute("isStart");
+        // console.log($btn.hasAttribute("isStart"));
+        // console.log(this.innerText);
+        if (this.innerText === "START") {
+          this.innerText = "STOP";
+          timer = setInterval(() => {
+            $time.innerHTML = formatTimer(++msec);
+          }, 0);
+        } else {
+          this.innerText = "START";
+          clearInterval(timer);
+          mesc = 0;
+        }
+      });
+
+      function formatTimer(millis) {
+        const m = Math.trunc(millis / 6000)
+          .toString()
+          .padStart(2, "0");
+        const s = Math.trunc(millis / 100)
+          .toString()
+          .padStart(2, "0");
+        const ms = Math.trunc(millis % 100)
+          .toString()
+          .padStart(3, "0");
+        return `${m}:${s}:${ms}`;
+      }
+    </script>
+  </body>
+</html>
