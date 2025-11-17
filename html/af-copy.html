@@ -7,12 +7,22 @@
   </head>
   <body>
     <div id="time">00:00.000</div>
-    <button id="btn">START</button>
+    <button id="btnStart">START</button>
+    <button id="btnClear">Clear</button>
     <script>
       let msec = 0;
-      const $btn = document.getElementById("btn");
       const $time = document.getElementById("time");
+      const $btnClear = document.getElementById("btnClear");
+      const $btnStart = document.getElementById("btnStart");
       let intl;
+
+      //여기서 clear가 왜 disbled에서 해결되지 않는건지 고민해보기
+      $btnClear.addEventListener("click", function () {
+        $btnClear.disabled = false;
+        start = undefined;
+        idle = 0;
+        $time.innerText = "00:00.000";
+      });
 
       let start;
       let stop;
@@ -33,7 +43,7 @@
       }
 
       let timer;
-      $btn.addEventListener("click", function () {
+      $btnStart.addEventListener("click", function () {
         if (this.innerText === "START") {
           this.innerText = "STOP";
           isRunning = true;
@@ -47,6 +57,7 @@
           isRunning = false;
           stop = date.now();
         }
+        $btnClear.disabled = isRunning;
       });
 
       function formatTimer(millis) {
