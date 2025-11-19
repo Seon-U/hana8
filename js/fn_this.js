@@ -13,17 +13,17 @@ const arrowFn = (name) => {
   console.log(this, new.target, this.name, name);
 };
 
-// expressFn("expfn");
+expressFn("expfn");
 expressFn.apply(hong, ["expfn"]);
 arrowFn.call(kim, "afn");
-//셀로우 카피해서 적용하는 수밖에 없는데 큰 의미가 없음
+// 셀로우 카피해서 적용하는 수밖에 없는데 큰 의미가 없음
 // this.id = kim.id;
-// this.name = kim.name;
+console.log("this", globalThis);
+arrowFn("afn");
 
-// arrowFn("afn");
-
-// const dfn = new expressFn("D");
+const dfn = new expressFn("D");
 // const afn = new arrowFn("A"); // error!
+return;
 
 console.log("-------------------------------------");
 const Dog = function (name) {
