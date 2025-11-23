@@ -149,49 +149,90 @@ const LINE2 = [
 // }
 
 //iterable
+// class Subway {
+//   #way;
+//   #index = 0;
+
+//   constructor(start, last) {
+//     const startIdx = LINE2.findIndex((v) => v === start);
+//     const lastIdx = LINE2.findIndex((v) => v === last);
+//     if (startIdx < lastIdx) this.#way = LINE2.slice(startIdx, lastIdx + 1);
+//     else this.#way = [...LINE2.slice(startIdx), ...LINE2.slice(0, lastIdx + 1)];
+//   }
+
+//   next() {
+//     return {
+//       value: this.#way[this.#index],
+//       done: this.#index === this.#way.length,
+//     };
+//   }
+
+//   [Symbol.iterator]() {
+//     return this.#way[Symbol.iterator]();
+//   }
+// }
+
 class Subway {
-  #way;
-  #index = 0;
+  #start;
+  #end;
+  #currIdx;
 
-  constructor(start, last) {
-    const startIdx = LINE2.findIndex((v) => v === start);
-    const lastIdx = LINE2.findIndex((v) => v === last);
-    if (startIdx < lastIdx) this.#way = LINE2.slice(startIdx, lastIdx + 1);
-    else this.#way = [...LINE2.slice(startIdx), ...LINE2.slice(0, lastIdx + 1)];
+  constructor(start, end) {
+    this.#start = start;
+    this.#end = end;
+    this.#currIdx = LINE2.indexOf(start);
   }
 
-  next() {
-    return {
-      value: this.#way[this.#index],
-      done: this.#index === this.#way.length,
-    };
+  *[Symbol.iterator]() {
+    // for(;;)
+    while (true) {
+      const nowStation = LINE2[this.#currIdx++];
+
+      if (nowStation === this.#end) {
+        yield nowStation;
+        // this.#currIdx = this.#startIdx
+        this.#currIdx = LINE2.indexOf(this.#start);
+        break;
+      }
+
+      if (this.#currIdx === LINE2.length) this.#currIdx = 0;
+
+      yield nowStation;
+    }
   }
 
-  [Symbol.iterator]() {
-    return this.#way[Symbol.iterator]();
+  iterator() {
+    return this[Symbol.iterator]();
+  }
+
+  toString() {
+    return `${this.#start}역에서 ${this.#end}역까지 가는 열차이며, 현재 ${LINE2[this.#currIdx]}역입니다`;
   }
 }
 
 const assert = require("assert");
-const routes = new Subway("문래", "신림");
-console.log([...routes]);
-
+const routes1 = new Subway("문래", "신림");
+console.log([...routes1]);
 assert.deepStrictEqual(
-  [...routes],
+  [...routes1],
   ["문래", "대림", "구로디지털단지", "신대방", "신림"]
 );
 
-const it1 = routes[Symbol.iterator]();
+const it1 = routes1.iterator();
+// const it1 = routes1[Symbol.iterator]()
+
 ["문래", "대림", "구로디지털단지", "신대방", "신림"].forEach((value, i) => {
   assert.deepStrictEqual(it1.next(), { value, done: false });
-  console.log(i, routes.toString());
+  console.log(i, routes1.toString());
 });
-// // console.log(it1.next());
 assert.deepStrictEqual(it1.next(), { value: undefined, done: true });
 
 const routes2 = new Subway("구로디지털단지", "성수"); // 32개 정거장
-routes2.next();
-console.log(routes2); // '구로디지털단지역에서 성수까지 가는 열차이며, 현재 신대방역입니다'
+routes2.iterator().next();
+assert.strictEqual(
+  routes2.toString(),
+  "구로디지털단지역에서 성수역까지 가는 열차이며, 현재 신대방역입니다"
+);
 console.log([...routes2]); // ['신대방', ..., '성수']
 const it2 = routes2[Symbol.iterator]();
 while (true) {

@@ -1,0 +1,25 @@
+{
+  "name": "tryhana",
+  "version": "0.0.1",
+  "description": "test module",
+  "keywords": [
+    "javascript"
+  ],
+  "homepage": "https://github.com/Seon-U/hana8#readme",
+  "bugs": {
+    "url": "https://github.com/Seon-U/hana8/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Seon-U/hana8.git"
+  },
+  "license": "MIT",
+  "author": "Seon-U",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev" : "node index.js",
+    "dev:watch" : "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
