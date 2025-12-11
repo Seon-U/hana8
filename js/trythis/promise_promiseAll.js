@@ -1,8 +1,43 @@
 console.log("----------------promiseAll----------------------");
 const assert = require("assert");
-const { resolve } = require("path");
 
-const promiseAll = (proms) =>
+// const randTime = (value) =>
+//   new Promise((resolve) => setTimeout(resolve, 1000 * Math.random(), value));
+
+const randTime = (sec) =>
+  new Promise((resolve, reject) => {
+    console.log("randTime: sec", sec);
+    setTimeout(resolve, sec * 1000 * Math.random(), sec);
+  });
+
+Promise.all([randTime(1), randTime(2), randTime(3)])
+  .then((orgArr) => {
+    console.log("orgArr", orgArr);
+    promiseAll([randTime(1), randTime(2), randTime(3)])
+      .then((arr) => {
+        console.log("then started");
+        console.table(arr);
+        assert.deepStrictEqual(arr, orgArr);
+      })
+      .catch(console.error);
+  })
+  .catch(console.error);
+
+const promiseAll = (parr) =>
+  new Promise((resolve, reject) => {
+    const results = [];
+    let runCnt = 0;
+    for (let i = 0; i < parr.length; i++) {
+      parr[i]
+        .then((res) => {
+          results[i] = res;
+          if (runCnt++ === parr.length) resolve(results);
+        })
+        .catch(reject);
+    }
+  });
+
+const promiseAllMy = (proms) =>
   new Promise((res, rej) => {
     const results = [];
     let cnt = 0;
@@ -21,9 +56,6 @@ const promiseAll = (proms) =>
       res([]);
     }
   });
-
-const randTime = (value) =>
-  new Promise((resolve) => setTimeout(resolve, 1000 * Math.random(), value));
 
 // Promise.all([randTime(1), randTime(2), randTime(3)])
 //   .then((arr) => {
@@ -59,7 +91,7 @@ console.log("----------------promiseSetteld----------------------");
 const allSettledResults = [
   {
     status: "fulfilled",
-    value: 11,
+    value: 1,
   },
   {
     status: "rejected",
@@ -67,11 +99,28 @@ const allSettledResults = [
   },
   {
     status: "fulfilled",
-    value: 33,
+    value: 3,
   },
 ];
 
-const promiseAllSettled = (proms) =>
+const promiseAllSettled = (parr) =>
+  new Promise((resolve, reject) => {
+    const results = [];
+    let runCnt = 0;
+    for (let i = 0; i < parr.length; i++) {
+      parr[i]
+        .then((value) => {
+          results[i] = { status: "fulfilled", value };
+        })
+        .catch((reason) => {
+          results[i] = { status: "rejected", reason };
+        })
+        .finally(() => {
+          if (++runCnt === parr.length) resolve(results);
+        });
+    }
+  });
+const promiseAllSettledMy = (proms) =>
   new Promise((res) => {
     const results = [];
     let cnt = 0;
@@ -90,13 +139,72 @@ const promiseAllSettled = (proms) =>
     });
   });
 
-promiseAllSettled([randTime(11), Promise.reject("RRR"), randTime(33)])
-  .then((array) => {
-    console.table(array);
-    // console.log(JSON.stringify(array, null, '  '));
-    console.log("여긴 과연 호출될까?!");
-    assert.deepStrictEqual(array, allSettledResults);
-  })
-  .catch((error) => {
-    console.log("reject!!!!!!>>", error);
-  });
+Promise.allSettled([randTime(1), Promise.reject("RRR"), randTime(3)]).then(
+  (parr) => {
+    console.log(parr);
+    promiseAllSettled([randTime(1), Promise.reject("RRR"), randTime(3)])
+      .then((array) => {
+        console.table(array);
+        // console.log(JSON.stringify(array, null, '  '));
+        console.log("여긴 과연 호출될까?!11");
+        assert.deepStrictEqual(array, parr);
+      })
+      .catch((error) => {
+        console.log("여긴 과연 호출될까?!22");
+        console.log("reject!!!!!!>>", error);
+      });
+  }
+);
+
+console.log("----------------Promise - await ----------------------");
+
+// new Promise((resolve) => randTime().then(resolve));
+async function f() {
+  const r1 = await randTime(1);
+  console.log("🚀 ~ f ~ r1:", r1);
+  return r1;
+}
+
+function f2() {
+  return new Promise((resolve) =>
+    randTime(1).then((r2) => {
+      console.log("r2", r2);
+      resolve(r2);
+    })
+  );
+}
+
+f();
+f2();
+
+const myFetch = async (url) => {
+  const res = await fetch(url);
+  return res.json();
+};
+
+const myFetch2 = async (url) => fetch(url).then((res) => res.json());
+
+console.log("--------------iter - async------------------------");
+
+function iter(vals) {
+  let i = -1;
+  return {
+    async next() {
+      i += 1;
+      return { value: randTime(vals[i]), done: i >= 3 };
+    },
+  };
+}
+
+(async () => {
+  const it = iter([1, 2, 3]);
+  console.time("iter");
+  const { value } = await it.next();
+  console.log("val", await value);
+  console.log("1=", (await it.next()).value);
+
+  // console.log("2=", await it.next());
+  // console.log("3=", await it.next());
+  // console.log("4=", await it.next());
+  console.timeEnd("iter");
+})();
