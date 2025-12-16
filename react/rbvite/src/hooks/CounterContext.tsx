@@ -25,7 +25,7 @@ const reducer = (preCount: number, { type, payload }: Action) => {
     case 'plus':
       return preCount + payload;
     case 'minus':
-      return preCount - payload;
+      return preCount + payload;
     case 'multi':
       return preCount * payload;
     default:
