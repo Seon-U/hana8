@@ -1,16 +1,24 @@
-import { PlusIcon } from 'lucide-react';
-import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { useDebounce } from '../hooks/deboun-throttle';
+import { Loader2Icon, PlusIcon } from 'lucide-react';
+import {
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import { useFetch } from '../hooks/fetch';
-import { useInterval } from '../hooks/interval';
 import { useSession, type ItemType } from '../hooks/SessionContext';
+import { useDebounce, useInterval, useThrottle } from '../hooks/useTimer';
 import Item from './Item';
 import Login from './Login';
 import Profile, { type ProfileHandler } from './Profile';
 import Button from './ui/Button';
+import LabelInput from './ui/LabelInput';
 
 export default function My() {
-  const { session } = useSession();
+  const { session, cacheItem } = useSession();
   const [badSec, setBadSec] = useState(0);
   const [goodSec, setGoodSec] = useState(0);
 
@@ -21,7 +29,7 @@ export default function My() {
 
   const item101 = session.cart.find((item) => item.id === 101);
   useEffect(() => {
-    console.log('🚀 ~ item101:', item101);
+    // console.log('🚀 ~ item101:', item101);
   }, [item101]);
 
   useEffect(() => {
@@ -55,23 +63,30 @@ export default function My() {
   //   setGoodSec(...args);
   // };
   const ff = (n: number) => {
-    console.log('🚀 ~ n:', n, goodSec); // n은 영원히 1 (: )
-    // setGoodSec(n + 1); // 위 goodSec는 영원히 0
+    // console.log('🚀 ~ n:', n, goodSec); // n은 영원히 1 (: )
+    setGoodSec(n + 1); // 위 goodSec는 영원히 0
     setGoodSec((p) => p + 1);
   };
 
-  console.log('🚀 ~ goodSec:', goodSec);
+  // console.log('🚀 ~ goodSec:', goodSec);
   useInterval(ff, 1000, goodSec + 1);
   // useInterval(setGoodSec, 1000, goodSec + 1);
-  const [input, setInput] = useState<string>();
-  const [searchWord, setSearchWord] = useState<string>();
-  console.log('🚀 ~ My ~ searchWord:', searchWord);
-  const debounceSearch = useDebounce(setSearchWord, 1000, input);
 
-  useEffect(() => {
-    if (input === '') return;
-    debounceSearch();
-  }, [input]);
+  const [searchStr, setSearchStr] = useState('');
+  const debounceSearchStr = useDebounce(searchStr, 500);
+  const throttleSearchStr = useThrottle(searchStr, 500);
+
+  const deferredStr = useDeferredValue(searchStr);
+
+  const [isSearching, startSearchTransition] = useTransition();
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    startSearchTransition(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setSearchStr(e.target.value);
+    });
+  };
+
+  cacheItem();
 
   return (
     <>
@@ -89,29 +104,22 @@ export default function My() {
         {item101?.name}
       </a>
       <h2 className='text-xl'>Tot: {totalPrice.toLocaleString()}원</h2>
-      <input
-        type='search'
-        placeholder='put names on cart'
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
+      {isSearching ? (
+        <Loader2Icon className='animate-spin' />
+      ) : (
+        <h2 className='text-xl text-red-800'>
+          {searchStr} : {deferredStr} : {debounceSearchStr}
+        </h2>
+      )}
+      <LabelInput label='search' onChange={handleSearch} autoComplete='off' />
       <ul>
-        {searchWord &&
-          session.cart.map(
-            (item) =>
-              item.name.includes(searchWord) && (
-                <li key={item.id}>
-                  <Item item={item} />
-                </li>
-              )
-          )}
-      </ul>
-      <ul>
-        {(session.cart.length ? session.cart : data)?.map((item) => (
-          <li key={item.id}>
-            <Item item={item} />
-          </li>
-        ))}
+        {(session.cart.length ? session.cart : data)
+          ?.filter((item) => item.name.includes(throttleSearchStr))
+          .map((item) => (
+            <li key={item.id}>
+              <Item item={item} />
+            </li>
+          ))}
         <li className='text-center'>
           {isAdding ? (
             <Item

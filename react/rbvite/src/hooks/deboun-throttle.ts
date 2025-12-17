@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useTimeout } from './interval';
+import { useTimeout } from './useTimer';
 
 export function useDebounce<T extends unknown[]>(
   cb: (...args: T) => void,

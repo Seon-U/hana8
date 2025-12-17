@@ -1,8 +1,10 @@
 import {
   createContext,
   use,
+  useEffect,
   useReducer,
   useRef,
+  useState,
   type PropsWithChildren,
   type RefObject,
 } from 'react';
@@ -24,9 +26,9 @@ const DefaultSession = {
   // loginUser: null,
   loginUser: { id: 1, name: 'Hong', age: 33 },
   cart: [
-    { id: 100, name: '라면', price: 3000 },
-    { id: 101, name: '컵라면', price: 2000 },
-    { id: 200, name: '파', price: 5000 },
+    { id: 100, name: '라면234', price: 3000 },
+    { id: 101, name: '컵라면111', price: 2000 },
+    { id: 200, name: '파004', price: 5000 },
   ],
 };
 
@@ -37,6 +39,7 @@ type SessionContextValue = {
   loginHandlerRef: RefObject<LoginHandler | null> | null;
   removeItem: (id: number) => void;
   saveItem: (item: ItemType) => void;
+  cacheItem: (items?: ItemType[]) => void;
 };
 
 const SessionContext = createContext<SessionContextValue>({
@@ -46,6 +49,7 @@ const SessionContext = createContext<SessionContextValue>({
   loginHandlerRef: null,
   removeItem: () => {},
   saveItem: () => {},
+  cacheItem: () => {},
 });
 
 type Action =
@@ -121,9 +125,40 @@ export function SessionProvider({ children }: PropsWithChildren) {
     }
   };
 
+  const [sessionSample, setSessionSample] = useState<Response>();
+
+  useEffect(() => {
+    fetch('public/sample.json').then((data) => setSessionSample(data));
+  }, []);
+
+  const cacheItem = (items: ItemType[] = DefaultSession.cart) => {
+    const expireDate = Number(localStorage.getItem('EXPIRE'));
+    const cart = localStorage.getItem('CART');
+
+    if (cart && expireDate >= Date.now()) return;
+    if (cart && expireDate < Date.now()) return localStorage.clear();
+
+    if (items.length || DefaultSession.cart.length) {
+      localStorage.setItem('CART', JSON.stringify(items));
+      localStorage.setItem('EXPIRE', String(Date.now() + 86400));
+      return;
+    }
+
+    localStorage.setItem('CART', JSON.stringify(sessionSample));
+    localStorage.setItem('EXPIRE', String(Date.now() + 86400));
+  };
+
   return (
     <SessionContext.Provider
-      value={{ session, login, logout, loginHandlerRef, removeItem, saveItem }}
+      value={{
+        session,
+        login,
+        logout,
+        loginHandlerRef,
+        removeItem,
+        saveItem,
+        cacheItem,
+      }}
     >
       {children}
     </SessionContext.Provider>
@@ -131,3 +166,5 @@ export function SessionProvider({ children }: PropsWithChildren) {
 }
 
 export const useSession = () => use(SessionContext);
+
+// localStorage.setItem('CART', JSON.stringify(DefaultSession.cart));
