@@ -1,5 +1,6 @@
 import { PlusIcon } from 'lucide-react';
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useDebounce } from '../hooks/deboun-throttle';
 import { useFetch } from '../hooks/fetch';
 import { useInterval } from '../hooks/interval';
 import { useSession, type ItemType } from '../hooks/SessionContext';
@@ -62,6 +63,16 @@ export default function My() {
   console.log('🚀 ~ goodSec:', goodSec);
   useInterval(ff, 1000, goodSec + 1);
   // useInterval(setGoodSec, 1000, goodSec + 1);
+  const [input, setInput] = useState<string>();
+  const [searchWord, setSearchWord] = useState<string>();
+  console.log('🚀 ~ My ~ searchWord:', searchWord);
+  const debounceSearch = useDebounce(setSearchWord, 1000, input);
+
+  useEffect(() => {
+    if (input === '') return;
+    debounceSearch();
+  }, [input]);
+
   return (
     <>
       {session?.loginUser ? <Profile ref={profileHandlerRef} /> : <Login />}
@@ -78,6 +89,23 @@ export default function My() {
         {item101?.name}
       </a>
       <h2 className='text-xl'>Tot: {totalPrice.toLocaleString()}원</h2>
+      <input
+        type='search'
+        placeholder='put names on cart'
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <ul>
+        {searchWord &&
+          session.cart.map(
+            (item) =>
+              item.name.includes(searchWord) && (
+                <li key={item.id}>
+                  <Item item={item} />
+                </li>
+              )
+          )}
+      </ul>
       <ul>
         {(session.cart.length ? session.cart : data)?.map((item) => (
           <li key={item.id}>
