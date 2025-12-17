@@ -4,11 +4,11 @@ import {
   useEffect,
   useReducer,
   useRef,
-  useState,
   type PropsWithChildren,
   type RefObject,
 } from 'react';
 import type { LoginHandler } from '../components/Login';
+import { useFetch } from './useFetch';
 export type ItemType = {
   id: number;
   name: string;
@@ -22,14 +22,20 @@ export type Session = {
 };
 export type LoginFunction = (name: string, age: number) => void;
 
-const DefaultSession = {
-  // loginUser: null,
-  loginUser: { id: 1, name: 'Hong', age: 33 },
-  cart: [
-    { id: 100, name: '라면234', price: 3000 },
-    { id: 101, name: '컵라면111', price: 2000 },
-    { id: 200, name: '파004', price: 5000 },
-  ],
+const SKEY = `CART_v1`;
+const SKEY_EXP = 'CART_EXP';
+const SKEY_EXP_TIME = 86400 * 1000 * 31;
+const setStorage = (cart: ItemType[]) => {
+  localStorage.setItem(SKEY, JSON.stringify(cart));
+  localStorage.setItem(SKEY_EXP, String(Date.now() + SKEY_EXP_TIME));
+};
+const getStorage = () => {
+  const expireAt = Number(localStorage.getItem(SKEY_EXP));
+  if (isNaN(expireAt) || expireAt < Date.now()) {
+    localStorage.clear();
+    return [];
+  }
+  return JSON.parse(localStorage.getItem(SKEY) || '[]') as ItemType[];
 };
 
 type SessionContextValue = {
@@ -39,20 +45,18 @@ type SessionContextValue = {
   loginHandlerRef: RefObject<LoginHandler | null> | null;
   removeItem: (id: number) => void;
   saveItem: (item: ItemType) => void;
-  cacheItem: (items?: ItemType[]) => void;
 };
-
 const SessionContext = createContext<SessionContextValue>({
-  session: DefaultSession,
+  session: { loginUser: null, cart: [] },
   login: () => {},
   logout: () => {},
   loginHandlerRef: null,
   removeItem: () => {},
   saveItem: () => {},
-  cacheItem: () => {},
 });
 
 type Action =
+  | { type: 'INITIALIZE'; payload: ItemType[] }
   | { type: 'LOGIN'; payload: LoginUser }
   | { type: 'LOGOUT'; payload: null }
   // | { type: 'ADD-ITEM'; payload: Omit<ItemType, 'id'> }
@@ -61,47 +65,70 @@ type Action =
   | { type: 'REMOVE-ITEM'; payload: number };
 
 const reducer = (session: Session, { type, payload }: Action) => {
+  let cart = [];
   switch (type) {
     case 'LOGIN':
     case 'LOGOUT':
       return { ...session, loginUser: payload };
     case 'ADD-ITEM':
-      return { ...session, cart: [...session.cart, payload] };
+      cart = [...session.cart, payload];
+      break;
     case 'EDIT-ITEM':
-      return {
-        ...session,
-        cart: session.cart.map((item) =>
-          item.id === payload.id ? payload : item
-        ),
-      };
+      cart = session.cart.map((item) =>
+        item.id === payload.id ? payload : item
+      );
+      break;
     case 'REMOVE-ITEM':
-      return {
-        ...session,
-        cart: session.cart.filter((item) => item.id !== payload),
-      };
+      cart = session.cart.filter((item) => item.id !== payload);
+      break;
+    case 'INITIALIZE':
+      cart = payload;
+      break;
     default:
       return session;
   }
+
+  setStorage(cart);
+  return { ...session, cart };
 };
 
 export function SessionProvider({ children }: PropsWithChildren) {
   // const [session, setSession] = useState<Session>(DefaultSession);
-  const [session, dispatch] = useReducer(reducer, DefaultSession);
+  const [session, dispatch] = useReducer(reducer, {
+    loginUser: { id: 1, name: 'Hong', age: 33 },
+    cart: getStorage(),
+  });
 
-  const logout = () => {
-    dispatch({ type: 'LOGOUT', payload: null });
-  };
+  const { data: sampleData } = useFetch<ItemType[]>('/data/sample.json');
+  // console.log('🚀 ~ data:', sampleData, session.cart);
+  useEffect(() => {
+    if (sampleData && !session.cart.length) {
+      dispatch({ type: 'INITIALIZE', payload: sampleData });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sampleData]);
 
   const loginHandlerRef = useRef<LoginHandler>(null);
+
+  const logout = () => {
+    // session.loginUser = null; // fail!!
+    // setSession({ ...session, loginUser: null });
+    dispatch({ type: 'LOGOUT', payload: null });
+  };
 
   const login: LoginFunction = (name, age) => {
     if (loginHandlerRef.current?.validate())
       dispatch({ type: 'LOGIN', payload: { id: 1, name, age } });
+    // setSession({ ...session, loginUser: { id: 1, name, age } });
   };
 
   const removeItem = (id: number) => {
     if (!confirm('Are u sure?')) return;
 
+    // setSession({
+    //   ...session,
+    //   cart: session.cart.filter((item) => item.id !== id),
+    // });
     dispatch({ type: 'REMOVE-ITEM', payload: id });
   };
 
@@ -114,6 +141,12 @@ export function SessionProvider({ children }: PropsWithChildren) {
     if (item) {
       // item.name = name;
       // item.price = price;
+      // setSession({
+      //   ...session,
+      //   cart: session.cart.map((item) =>
+      //     item.id === id ? { id, name, price } : item
+      //   ),
+      // });
       dispatch({ type: 'EDIT-ITEM', payload: { id, name, price } });
     } else {
       const newItem = {
@@ -121,44 +154,14 @@ export function SessionProvider({ children }: PropsWithChildren) {
         name,
         price,
       };
+      // setSession({ ...session, cart: [...session.cart, newItem] });
       dispatch({ type: 'ADD-ITEM', payload: newItem });
     }
   };
 
-  const [sessionSample, setSessionSample] = useState<Response>();
-
-  useEffect(() => {
-    fetch('public/sample.json').then((data) => setSessionSample(data));
-  }, []);
-
-  const cacheItem = (items: ItemType[] = DefaultSession.cart) => {
-    const expireDate = Number(localStorage.getItem('EXPIRE'));
-    const cart = localStorage.getItem('CART');
-
-    if (cart && expireDate >= Date.now()) return;
-    if (cart && expireDate < Date.now()) return localStorage.clear();
-
-    if (items.length || DefaultSession.cart.length) {
-      localStorage.setItem('CART', JSON.stringify(items));
-      localStorage.setItem('EXPIRE', String(Date.now() + 86400));
-      return;
-    }
-
-    localStorage.setItem('CART', JSON.stringify(sessionSample));
-    localStorage.setItem('EXPIRE', String(Date.now() + 86400));
-  };
-
   return (
     <SessionContext.Provider
-      value={{
-        session,
-        login,
-        logout,
-        loginHandlerRef,
-        removeItem,
-        saveItem,
-        cacheItem,
-      }}
+      value={{ session, login, logout, loginHandlerRef, removeItem, saveItem }}
     >
       {children}
     </SessionContext.Provider>
@@ -166,5 +169,3 @@ export function SessionProvider({ children }: PropsWithChildren) {
 }
 
 export const useSession = () => use(SessionContext);
-
-// localStorage.setItem('CART', JSON.stringify(DefaultSession.cart));
