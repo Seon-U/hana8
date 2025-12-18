@@ -6,8 +6,8 @@ export default function Nav() {
     session: { loginUser },
   } = useSession();
   return (
-    <nav className='flex justify-between'>
-      <ul>
+    <nav className='flex justify-between mx-5'>
+      <ul className='flex gap-5'>
         <li>
           <Link to={'/'}>Home</Link>
         </li>
@@ -20,14 +20,12 @@ export default function Nav() {
         <li>
           <Link to={'/posts'}>Posts</Link>
         </li>
-        <li>
-          {loginUser?.name ? (
-            <small>{loginUser?.name}</small>
-          ) : (
-            <Link to={'/login'}>Login</Link>
-          )}
-        </li>
       </ul>
+      {loginUser?.name ? (
+        <h2>{loginUser?.name}</h2>
+      ) : (
+        <Link to={'/login'}>Login</Link>
+      )}
     </nav>
   );
 }
