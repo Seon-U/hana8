@@ -15,6 +15,7 @@ import { useSession, type ItemType } from '../hooks/SessionContext';
 import { useInterval, useThrottle } from '../hooks/useTimer';
 import Item from './Item';
 import Login from './Login';
+import Posts from './Posts';
 import Profile, { type ProfileHandler } from './Profile';
 import Button from './ui/Button';
 import LabelInput from './ui/LabelInput';
@@ -130,6 +131,7 @@ export default function My() {
         <button onClick={clear}>clear</button>
       </div>
       {session?.loginUser ? <Profile ref={profileHandlerRef} /> : <Login />}
+      <Posts />
       <hr />
       <a
         href='#!'
