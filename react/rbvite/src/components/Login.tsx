@@ -41,6 +41,12 @@ export default function Login() {
     login(nameRef.current?.value ?? '', Number(ageRef.current?.value));
   };
 
+  const loginAction = (formData: FormData) => {
+    const formObj = Object.fromEntries(formData);
+    console.log('🚀 ~ loginAction ~ formData:', formObj);
+    login(String(formData.get('name')), Number(formData.get('age')));
+  };
+
   useEffect(() => {
     alert('login plz....');
     nameRef.current?.focus();
@@ -51,6 +57,11 @@ export default function Login() {
   return (
     <div className='border border-red-300 p-3 rounded-lg'>
       <h1 className='text-2xl text-center font-medium'>Login</h1>
+      <form action={loginAction} className='space-y-3'>
+        <input type='text' name='name' />
+        <input type='text' name='age' />
+        <button type='submit'> LoginAction </button>
+      </form>
       <form onSubmit={makeLogin} className='space-y-3'>
         <LabelInput label='Name' ref={nameRef} />
         <LabelInput

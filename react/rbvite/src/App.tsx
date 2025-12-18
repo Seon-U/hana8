@@ -1,6 +1,7 @@
 import './App.css';
 import Hello from './components/Hello';
 import My from './components/My';
+import Searchbar from './components/Searchbar';
 import { useCounter } from './hooks/CounterContext';
 import { SessionProvider } from './hooks/SessionContext';
 
@@ -15,6 +16,7 @@ function App() {
         <My />
         <Hello>반갑습니다</Hello>
       </SessionProvider>
+      <Searchbar />
     </div>
   );
 }

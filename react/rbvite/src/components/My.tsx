@@ -1,5 +1,6 @@
-import { Loader2Icon, PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import {
+  useActionState,
   useDeferredValue,
   useEffect,
   useMemo,
@@ -9,13 +10,15 @@ import {
   useTransition,
   type ChangeEvent,
 } from 'react';
-import { useSession } from '../hooks/SessionContext';
+import { useFormStatus } from 'react-dom';
+import { useSession, type ItemType } from '../hooks/SessionContext';
 import { useInterval, useThrottle } from '../hooks/useTimer';
 import Item from './Item';
 import Login from './Login';
 import Profile, { type ProfileHandler } from './Profile';
 import Button from './ui/Button';
 import LabelInput from './ui/LabelInput';
+import Spinner from './ui/Spinner';
 
 export default function My() {
   const { session } = useSession();
@@ -96,12 +99,26 @@ export default function My() {
   // }, [deferredStr]);
 
   const [isSearching, startSearchTransition] = useTransition();
+  const [searchResult, setSearchResult] = useState<ItemType[]>([]);
+
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     startSearchTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const str = e.target.value;
       setSearchStr(e.target.value);
+      setSearchResult(session.cart.filter((item) => item.name.includes(str)));
     });
   };
+
+  const [results, search, isPending] = useActionState(
+    async (preResults: ItemType[], formData: FormData) => {
+      const str = formData.get('ActionState') as string;
+      console.log('****************', preResults, str);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      return session.cart.filter((item) => item.name.includes(str));
+    },
+    []
+  );
 
   return (
     <>
@@ -125,14 +142,35 @@ export default function My() {
         {item101?.name}
       </a>
       <h2 className='text-xl'>Tot: {totalPrice.toLocaleString()}원</h2>
+      <div>
+        {isPending ? <Spinner /> : 'SR_ActionState'}:{' '}
+        {results.map((item) => item.name).join()}
+      </div>
+      <div>
+        SR_useTransition: {searchResult.map((item) => item.name).join()}
+      </div>
+
       {isSearching ? (
-        <Loader2Icon className='animate-spin' />
+        <Spinner />
       ) : (
         <h2 className='text-xl text-red-500'>
           {searchStr} : {deferredStr} : {debouncedSearchStr}
         </h2>
       )}
-      <LabelInput label='search' onChange={handleSearch} autoComplete='off' />
+
+      {/* <form action={search}> */}
+      <form className='flex flex-gap-1'>
+        <LabelInput label='ActionState' autoComplete='off' />
+        <button formAction={search}>Action</button>
+        {/* <button formAction={create}>Create</button> */}
+        <SearchButton />
+      </form>
+
+      <LabelInput
+        label='Transition'
+        onChange={handleSearch}
+        autoComplete='off'
+      />
       <ul>
         {session.cart
           ?.filter((item) => item.name.includes(debouncedSearchStr))
@@ -156,4 +194,10 @@ export default function My() {
       </ul>
     </>
   );
+}
+
+function SearchButton() {
+  const { pending, data } = useFormStatus();
+  console.log('dddddddd>>', data, pending);
+  return <Button disabled={pending}>search Button</Button>;
 }
