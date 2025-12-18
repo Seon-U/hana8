@@ -17,7 +17,8 @@ import Item from './Item';
 import Login from './Login';
 import Posts from './Posts';
 import Profile, { type ProfileHandler } from './Profile';
-import Button from './ui/Button';
+import Btn from './ui/btn';
+import Button from './ui/button';
 import LabelInput from './ui/LabelInput';
 import Spinner from './ui/Spinner';
 
@@ -127,8 +128,8 @@ export default function My() {
         bad: {badSec}, good: {goodSec}
       </h1>
       <div className='flex'>
-        <button onClick={reset}>reset</button>
-        <button onClick={clear}>clear</button>
+        <Button onClick={reset}>reset</Button>
+        <Button onClick={clear}>clear</Button>
       </div>
       {session?.loginUser ? <Profile ref={profileHandlerRef} /> : <Login />}
       <Posts />
@@ -188,9 +189,9 @@ export default function My() {
               toggleAdding={toggleAdding}
             />
           ) : (
-            <Button onClick={toggleAdding} className=''>
+            <Btn onClick={toggleAdding} className=''>
               <PlusIcon />
-            </Button>
+            </Btn>
           )}
         </li>
       </ul>
@@ -201,5 +202,5 @@ export default function My() {
 function SearchButton() {
   const { pending, data } = useFormStatus();
   console.log('dddddddd>>', data, pending);
-  return <Button disabled={pending}>search Button</Button>;
+  return <Btn disabled={pending}>search Button</Btn>;
 }

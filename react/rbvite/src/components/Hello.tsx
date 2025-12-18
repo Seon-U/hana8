@@ -1,14 +1,15 @@
-import { type PropsWithChildren } from 'react';
+import { useEffect, useEffectEvent, type PropsWithChildren } from 'react';
 import { useCounter } from '../hooks/CounterContext';
 import { useSession } from '../hooks/SessionContext';
 import { useFetch } from '../hooks/useFetch';
 import { useToggle } from '../hooks/useToggle';
-import Button from './ui/Button';
+import Btn from './ui/btn';
+import { Button } from './ui/button';
 
 export default function Hello({ children }: PropsWithChildren) {
   const { count, plusCount } = useCounter();
   // const [toggler, toggle] = useReducer((p) => !p, false);
-  const [, toggle] = useToggle();
+  const [tog, toggle] = useToggle();
   const {
     session: { loginUser },
   } = useSession();
@@ -23,6 +24,11 @@ export default function Hello({ children }: PropsWithChildren) {
     [count]
   );
 
+  const t = useEffectEvent(() => console.log('effect - toggle', tog));
+  useEffect(() => {
+    t();
+    console.log('effect - count!!!', count);
+  }, [count]);
   // useEffect(() => {
   //   plusCount();
   //   // console.log('🚀 ~ count:', toggler);
@@ -47,15 +53,17 @@ export default function Hello({ children }: PropsWithChildren) {
       <h2 className='text-2xl'>
         {count + 1}: {isLoading ? '...' : user?.username}
       </h2>
+      {tog}
       <input type='text' onChange={toggle} />
       <h2 className='text-2xl'>
         Hello, {name}
         {age && <small className='text-sm'>({age})</small>}
       </h2>
       <div>{children}</div>
-      <Button className='font-bold' onClick={plusCount}>
+      <Button variant={'ghost'}>shadcnButton</Button>
+      <Btn className='font-bold' onClick={plusCount}>
         count + 1
-      </Button>
+      </Btn>
       <button onClick={toggle}>Toggle</button>
     </div>
   );

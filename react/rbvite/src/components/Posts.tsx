@@ -1,11 +1,14 @@
 import { useActionState, useOptimistic, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './ui/Spinner';
+import Alerter from './ui/alerter';
+import Button from './ui/button';
 
 type Post = {
   id: number;
   title: string;
   userId: number;
+  body: string;
 };
 
 export default function Posts() {
@@ -58,9 +61,13 @@ export default function Posts() {
         <Spinner />
       ) : (
         <ul className='w-80 truncate text-ellipsis overflow-hidden'>
-          {posts.map(({ id, title }) => (
+          {posts.map(({ id, title, body }) => (
             <li key={id}>
-              {id}. {title}
+              <Alerter title={title} description={body}>
+                <Button variant='ghost'>
+                  {id} . {title}
+                </Button>
+              </Alerter>
             </li>
           ))}
         </ul>

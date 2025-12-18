@@ -1,6 +1,6 @@
 import { useImperativeHandle, type RefObject } from 'react';
 import { useSession } from '../hooks/SessionContext';
-import Button from './ui/Button';
+import Button from './ui/button';
 
 type Prop = {
   ref: RefObject<ProfileHandler | null>;

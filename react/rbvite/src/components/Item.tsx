@@ -1,7 +1,7 @@
 import { FilePlus2Icon, RotateCcwIcon, SaveIcon } from 'lucide-react';
 import { useRef, useState, type FormEvent, type RefObject } from 'react';
 import { useSession, type ItemType } from '../hooks/SessionContext';
-import Button from './ui/Button';
+import Button from './ui/button';
 import LabelInput from './ui/LabelInput';
 import Small from './ui/Small';
 
