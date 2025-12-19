@@ -2,7 +2,10 @@ import { useRef } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Hello from './components/Hello';
 import Home from './components/Home';
-import Item from './components/Item';
+import ItemDetail from './components/ItemDetail';
+import ItemDetailLayout from './components/ItemDetailLayout';
+import ItemEdit from './components/ItemEdit';
+import ItemLayout from './components/ItemLayout';
 import Items from './components/items';
 import My from './components/My';
 import Posts from './components/Posts';
@@ -23,9 +26,12 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/my' element={<My />} />
           <Route path='/posts' element={<Posts />} />
-          <Route path='/items'>
+          <Route path='/items' element={<ItemLayout />}>
             <Route index element={<Items />} />
-            <Route path='/:id' element={<Item />} />
+            <Route path=':id' element={<ItemDetailLayout />}>
+              <Route index element={<ItemDetail />} />
+              <Route path='edit' element={<ItemEdit />} />
+            </Route>
           </Route>
           <Route
             path='/profile'
