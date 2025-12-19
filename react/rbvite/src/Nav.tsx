@@ -1,24 +1,37 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useSession } from './hooks/SessionContext';
+import { cn } from './lib/utils';
 
 export default function Nav() {
   const {
     session: { loginUser },
   } = useSession();
+
   return (
-    <nav className='flex justify-between mx-5'>
+    <nav className='flex justify-between fixed mx-5 bg-amber-100 w-full px-5'>
       <ul className='flex gap-5'>
         <li>
-          <Link to={'/'}>Home</Link>
+          <NavLink
+            to={'/'}
+            className={({ isActive }) => cn({ 'text-blue-500': isActive })}
+          >
+            Home
+          </NavLink>
         </li>
         <li>
-          <Link to={'/my'}>My</Link>
+          <NavLink to={'/my'}>My</NavLink>
         </li>
         <li>
-          <Link to={'/hello'}>Hello</Link>
+          <NavLink to={'/hello'}>Hello</NavLink>
         </li>
         <li>
-          <Link to={'/posts'}>Posts</Link>
+          <NavLink to={'/profile'}>profile</NavLink>
+        </li>
+        <li>
+          <NavLink to={'/items'}>Items</NavLink>
+        </li>
+        <li>
+          <NavLink to={'/posts'}>Posts</NavLink>
         </li>
       </ul>
       {loginUser?.name ? (

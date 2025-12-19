@@ -1,8 +1,14 @@
-import { EditIcon, FilePlus2Icon, RotateCcwIcon, SaveIcon } from 'lucide-react';
-import { useRef, useState, type FormEvent, type RefObject } from 'react';
-import { useLocation } from 'react-router-dom';
+import { FilePlus2Icon, RotateCcwIcon, SaveIcon } from 'lucide-react';
+import {
+  useReducer,
+  useRef,
+  useState,
+  type FormEvent,
+  type RefObject,
+} from 'react';
+import { Navigate, useParams } from 'react-router-dom';
 import { useSession, type ItemType } from '../hooks/SessionContext';
-import Button from './ui/button';
+import Btn from './ui/btn';
 import LabelInput from './ui/LabelInput';
 import Small from './ui/Small';
 
@@ -11,15 +17,22 @@ type Props = {
   toggleAdding?: () => void;
 };
 
-export default function Item() {
-  const { removeItem, saveItem } = useSession();
-  const location = useLocation();
-  const { item, toggleAdding }Props = location.state;
+export default function ItemRoute() {
+  const {
+    session: { cart },
+  } = useSession();
+  const { id } = useParams();
+  console.log('🚀 ~ id:', id);
 
-  const [isEditing, setEditing] = useState(!item.id);
+  const [isAdding, toggleAdding] = useReducer((pre) => !pre, false);
+  const { removeItem, saveItem } = useSession();
+  const [isEditing, setEditing] = useState(!id);
   const [hasDirty, setDirty] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
+
+  const item = cart.find((item) => item.id === Number(id));
+  if (!item) return <Navigate to={'/items'} />;
 
   const checkDirty = () => {
     setDirty(
@@ -81,7 +94,6 @@ export default function Item() {
     if (toggleAdding) toggleAdding();
   };
 
-
   return (
     <>
       {isEditing ? (
@@ -100,38 +112,33 @@ export default function Item() {
             onChange={checkDirty}
             placeholder='price...'
           />
-          <Button onClick={cancelEdit} type='reset' className=''>
+          <Btn onClick={cancelEdit} type='reset' className=''>
             <RotateCcwIcon />
-          </Button>
+          </Btn>
           {hasDirty && (
-            <Button
-              type='submit'
-              className='text-blue-500'
-              disabled={!hasDirty}
-            >
+            <Btn type='submit' className='text-blue-500' disabled={!hasDirty}>
               {item.id ? <SaveIcon /> : <FilePlus2Icon />}
-            </Button>
+            </Btn>
           )}
         </form>
       ) : (
         <>
           <Small>{item.id}.</Small>
-          <Button
-            variant={'link'}
+          <button
             onClick={makeEdit}
             className='border-0 p-0 hover:bg-inherit hover:underline'
           >
-            {item.name} <EditIcon size={16}/>
-          </Button>
+            {item.name}
+          </button>
           <Small>{item.price.toLocaleString()}원</Small>
-          <Button
+          <Btn
             onClick={() => {
               if (removeItem) removeItem(item.id);
             }}
             className='ml-2 px-1 py-0 text-sm bg-red-500 hover:bg-red-600 text-white shadow-lg hover:shadow-2xl active:scale-150 transition duration-300'
           >
             X
-          </Button>
+          </Btn>
         </>
       )}
     </>

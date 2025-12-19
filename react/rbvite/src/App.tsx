@@ -1,13 +1,20 @@
+import { useRef } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Hello from './components/Hello';
 import Home from './components/Home';
+import Item from './components/Item';
+import Items from './components/items';
 import My from './components/My';
 import Posts from './components/Posts';
+import Profile, { type ProfileHandler } from './components/Profile';
 import Searchbar from './components/Searchbar';
 import { SessionProvider } from './hooks/SessionContext';
 import Nav from './Nav';
+import NotFound from './NotFound';
 
 function App() {
+  const profileHandlerRef = useRef<ProfileHandler>(null);
+
   return (
     <SessionProvider>
       <Nav />
@@ -16,10 +23,29 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/my' element={<My />} />
           <Route path='/posts' element={<Posts />} />
+          <Route path='/items'>
+            <Route index element={<Items />} />
+            <Route path='/:id' element={<Item />} />
+          </Route>
+          <Route
+            path='/profile'
+            element={<Profile ref={profileHandlerRef} />}
+          />
           <Route path='/hello' element={<Hello />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
         <Searchbar />
       </div>
+      <a
+        href='#!'
+        onClick={(e) => {
+          e.preventDefault();
+          profileHandlerRef.current?.showLoginUser();
+          console.log('xxx>>', profileHandlerRef.current?.xxx);
+        }}
+      >
+        Show LoginUser
+      </a>
     </SessionProvider>
   );
 }

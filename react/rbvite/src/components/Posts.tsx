@@ -1,8 +1,8 @@
 import { useActionState, useOptimistic, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import Spinner from './ui/Spinner';
-import Alerter from './ui/alerter';
+import Alerter from './ui/Alerter';
 import Button from './ui/button';
+import Spinner from './ui/Spinner';
 
 type Post = {
   id: number;
