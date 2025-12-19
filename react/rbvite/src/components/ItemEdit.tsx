@@ -1,39 +1,26 @@
-import { useSession } from '@/hooks/SessionContext';
-import { FilePlus2Icon, RotateCcwIcon, SaveIcon } from 'lucide-react';
+import { useSession, type ItemType } from '@/hooks/SessionContext';
 import {
-  useEffect,
-  useRef,
-  useState,
-  type FormEvent,
-  type RefObject,
-} from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+  FilePlus2Icon,
+  RotateCcwIcon,
+  SaveIcon,
+  Trash2Icon,
+} from 'lucide-react';
+import { useRef, useState, type FormEvent, type RefObject } from 'react';
+
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import LabelInput from './ui/LabelInput';
 import Btn from './ui/btn';
+import Button from './ui/button';
 
 export default function ItemEdit() {
-  const {
-    session: { cart },
-    saveItem,
-  } = useSession();
+  const item = useOutletContext<ItemType>();
+  const { removeItem, saveItem } = useSession();
 
   const navigate = useNavigate();
-  const params = useParams<{ id: string }>();
-  const id = Number(params.id);
 
-  const [isEditing, setEditing] = useState(!id);
   const [hasDirty, setDirty] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isEditing) nameRef.current?.focus();
-  }, [isEditing]);
-
-  const item = !id
-    ? { id, name: '', price: 3000 }
-    : cart.find((item) => item.id === id);
-  if (!item) return <Navigate to={'/items'} />;
 
   const checkDirty = () => {
     setDirty(
@@ -76,19 +63,22 @@ export default function ItemEdit() {
       priceRef.current.value = '';
       nameRef.current.focus();
     }
-    setEditing(false);
     setDirty(false);
 
-    navigate(`/items/${savedId}`);
+    navigate(`/items/${savedId}?renew=1`);
   };
 
   const cancelEdit = () => {
-    setEditing(!isEditing);
     // if (nameRef.current && priceRef.current) {
     //   nameRef.current.value = item.name;
     //   priceRef.current.value = String(item.price);
     // }
-    navigate(-1);
+    navigate(`/items/${item.id}`);
+  };
+
+  const deleteItem = () => {
+    const isDeleted = removeItem(item.id);
+    if (isDeleted) navigate(`/items`);
   };
 
   return (
@@ -111,6 +101,9 @@ export default function ItemEdit() {
         <Btn onClick={cancelEdit} type='reset' className=''>
           <RotateCcwIcon />
         </Btn>
+        <Button type='button' variant={'destructive'} onClick={deleteItem}>
+          <Trash2Icon />
+        </Button>
         {hasDirty && (
           <Btn type='submit' className='text-blue-500' disabled={!hasDirty}>
             {item.id ? <SaveIcon /> : <FilePlus2Icon />}
