@@ -1,11 +1,23 @@
 import Image from 'next/image';
 import { use } from 'react';
+import { blurDataURL_dark } from '@/app/constants';
 import Modal from '@/components/Modal';
 import type { Photo } from '../../../page';
 
 type Props = {
   params: Promise<{ photoId: string }>;
 };
+
+export const dynamicParams = false;
+
+export const generateStaticParams = async () => {
+  const photos: Awaited<Photo[]> = await fetch(
+    'https://picsum.photos/v2/list?limit=20',
+  ).then((res) => res.json());
+
+  return photos.map(({ id: photoId }) => ({ photoId }));
+};
+
 export default function PhotoView({ params }: Props) {
   const { photoId } = use(params);
   const { author, download_url, width, height } = use(
@@ -21,7 +33,8 @@ export default function PhotoView({ params }: Props) {
           alt={author}
           width={width}
           height={height}
-          blurDataURL="/file.svg"
+          blurDataURL={blurDataURL_dark}
+          // blurDataURL="/file.svg"
         />
       </div>
     </Modal>
