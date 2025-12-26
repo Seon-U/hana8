@@ -2,8 +2,8 @@
 
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { useActionState, useReducer, useState } from 'react';
+import CheckSwitch from '@/components/CheckSwitch';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,8 +13,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { type Post, type PostError, savePost } from './posts.action';
 
@@ -34,12 +32,14 @@ export default function PostEdit() {
   const [isOpen, toggleOpen] = useReducer((p) => !p, false);
   const [folder, setFolder] = useState<Folder>(FOLDERS[0]);
   const [post, setPost] = useState<Partial<Post>>();
-  const [localPrivate, togglePrivate] = useReducer((p) => !p, false);
+  const [isShowButtons, setShowButtons] = useState(false);
+  // const [localPrivate, togglePrivate] = useReducer((p) => !p, false);
   // const [localPublic, togglePublic] = useReducer((p) => !p, false);
 
   const [postError, save, isPending] = useActionState(
     async (_: PostError | undefined, formData: FormData) => {
-      formData.set('isprivate', localPrivate ? 'on' : '');
+      // formData.set('isprivate', localPrivate ? 'on' : '');
+      console.log('fff>>', formData.get('isprivate'));
       const [err, data] = await savePost(formData);
       if (err) {
         setPost(err.data);
@@ -90,7 +90,21 @@ export default function PostEdit() {
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          <Label htmlFor="isPrivate">
+          <CheckSwitch
+            label="비공개 글"
+            name="isprivate"
+            checked={post?.isprivate}
+            setCheckedAction={setShowButtons}
+            variant="muted"
+          />
+          <CheckSwitch
+            label="비공개 글"
+            name="isprivate"
+            checked={post?.isprivate}
+            setCheckedAction={setShowButtons}
+            variant="destructive"
+          />
+          {/* <Label htmlFor="isPrivate">
             <Checkbox
               id="isPrivate"
               name="isprivate"
@@ -100,11 +114,17 @@ export default function PostEdit() {
             />
             비공개 글 {post?.isprivate ? 'True' : 'False'}::
             {localPrivate ? 'True' : 'False'}
-          </Label>
-          <Label htmlFor="isPublic">
+          </Label> */}
+          <CheckSwitch
+            label="홈에 공개"
+            type="switch"
+            name="ispublic"
+            variant="destructive"
+          />
+          {/* <Label htmlFor="isPublic">
             <Switch id="isPublic" name="ispublic" />
             홈에 공개
-          </Label>
+          </Label> */}
         </div>
 
         {folder.type === 'file' ? (
@@ -123,17 +143,19 @@ export default function PostEdit() {
 
         {!!postError && <span className="text-red-500">{postError.error}</span>}
 
-        <div className="flex justify-around">
-          <Button type="reset" variant={'secondary'}>
-            취소
-          </Button>
-          <Button type="button" variant={'destructive'}>
-            삭제
-          </Button>
-          <Button type="submit" variant={'apply'} disabled={isPending}>
-            저장{isPending && '...'}
-          </Button>
-        </div>
+        {isShowButtons && (
+          <div className="flex justify-around">
+            <Button type="reset" variant={'secondary'}>
+              취소
+            </Button>
+            <Button type="button" variant={'destructive'}>
+              삭제
+            </Button>
+            <Button type="submit" variant={'apply'} disabled={isPending}>
+              저장{isPending && '...'}
+            </Button>
+          </div>
+        )}
       </form>
     </>
   );
