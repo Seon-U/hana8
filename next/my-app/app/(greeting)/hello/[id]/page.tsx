@@ -1,15 +1,8 @@
-// 'use client';
+'use client';
 
-import { use } from 'react';
+import { useParams } from 'next/navigation';
 
-// import { useParams } from 'next/navigation';
-// const { id } = useParams<{ id: string }>();
-
-type Props = {
-  params: Promise<{ id: number }>;
-};
-
-export default function HelloId({ params }: Props) {
-  const { id } = use(params);
+export default function HelloId() {
+  const { id } = useParams<{ id: string }>();
   return `Hello id is ${id}`;
 }

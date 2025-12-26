@@ -3,7 +3,6 @@
 
 import type { Route } from 'next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
 import SayHello from './SayHello';
 
 export default function HelloPage() {
@@ -11,9 +10,9 @@ export default function HelloPage() {
     <>
       <h1 className="">Hello Page</h1>
       <div suppressHydrationWarning>
-        <Suspense fallback={<h1>...</h1>}>
-          <SearchParamId />
-        </Suspense>
+        {/* <Suspense fallback={<h1>...</h1>}> */}
+        <SearchParamId />
+        {/* </Suspense> */}
       </div>
     </>
   );

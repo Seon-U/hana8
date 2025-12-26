@@ -1,6 +1,8 @@
+'use cache';
+
+import { cacheLife } from 'next/cache';
 import Image from 'next/image';
 import Link from 'next/link';
-import { use } from 'react';
 
 export type Photo = {
   id: string;
@@ -10,15 +12,16 @@ export type Photo = {
   height: number;
 };
 
-export const revalidate = 86400; // 10 sec
+// export const revalidate = 86400; // 10 sec
 
 const getPhotos = async (n: number = 20): Promise<Photo[]> =>
   fetch(`https://picsum.photos/v2/list?limit=${n}`, {
     cache: 'force-cache',
   }).then((res) => res.json());
 
-export default function Photos() {
-  const Photos = use(getPhotos());
+export default async function Photos() {
+  cacheLife('minutes');
+  const Photos = await getPhotos();
 
   return (
     <div className="flex flex-wrap justify-center gap-3">

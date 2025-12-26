@@ -1,10 +1,12 @@
-import { use } from 'react';
+'use cache';
 
-export default function Comments({
+export const generateStaticParams = async () => [{ time: 'morningX' }];
+
+export default async function Comments({
   params,
 }: {
   params: Promise<{ time: string }>;
 }) {
-  const { time } = use(params);
+  const { time } = await params;
   return `Comments - ${time}`;
 }
