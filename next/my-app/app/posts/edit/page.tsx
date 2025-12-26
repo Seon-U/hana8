@@ -32,14 +32,14 @@ export default function PostEdit() {
   const [isOpen, toggleOpen] = useReducer((p) => !p, false);
   const [folder, setFolder] = useState<Folder>(FOLDERS[0]);
   const [post, setPost] = useState<Partial<Post>>();
-  const [isShowButtons, setShowButtons] = useState(false);
   // const [localPrivate, togglePrivate] = useReducer((p) => !p, false);
   // const [localPublic, togglePublic] = useReducer((p) => !p, false);
+  const [isShowButtons, setShowButtons] = useState(false);
 
   const [postError, save, isPending] = useActionState(
     async (_: PostError | undefined, formData: FormData) => {
       // formData.set('isprivate', localPrivate ? 'on' : '');
-      console.log('fff>>', formData.get('isprivate'));
+      // console.log('fff>>', formData.get('isprivate'));
       const [err, data] = await savePost(formData);
       if (err) {
         setPost(err.data);
@@ -82,28 +82,13 @@ export default function PostEdit() {
           <Input
             type="text"
             name="title"
-            //아래처럼 하면 값 수정이 input에서 안됨
-            // value={post?.title}
             defaultValue={post?.title}
+            className="bg-muted"
             placeholder="title..."
           />
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          <CheckSwitch
-            label="비공개 글"
-            name="isprivate"
-            checked={post?.isprivate}
-            setCheckedAction={setShowButtons}
-            variant="muted"
-          />
-          <CheckSwitch
-            label="비공개 글"
-            name="isprivate"
-            checked={post?.isprivate}
-            setCheckedAction={setShowButtons}
-            variant="destructive"
-          />
           {/* <Label htmlFor="isPrivate">
             <Checkbox
               id="isPrivate"
@@ -115,16 +100,54 @@ export default function PostEdit() {
             비공개 글 {post?.isprivate ? 'True' : 'False'}::
             {localPrivate ? 'True' : 'False'}
           </Label> */}
+
           <CheckSwitch
-            label="홈에 공개"
-            type="switch"
-            name="ispublic"
-            variant="destructive"
+            label="default"
+            name="isprivate"
+            checked={post?.isprivate}
+            setCheckedAction={setShowButtons}
           />
-          {/* <Label htmlFor="isPublic">
-            <Switch id="isPublic" name="ispublic" />
-            홈에 공개
-          </Label> */}
+          <CheckSwitch
+            label="destructive"
+            name="isprivate"
+            checked={post?.isprivate}
+            variant="destructive"
+            setCheckedAction={setShowButtons}
+          />
+          <CheckSwitch
+            label="secondary"
+            name="isprivate"
+            checked={post?.isprivate}
+            variant="secondary"
+            setCheckedAction={setShowButtons}
+          />
+          <CheckSwitch
+            label="muted"
+            name="isprivate"
+            checked={post?.isprivate}
+            variant="muted"
+            setCheckedAction={setShowButtons}
+          />
+
+          <CheckSwitch label="홈에 공개" type="switch" name="ispublic" />
+          <CheckSwitch
+            label="secondary"
+            type="switch"
+            variant="secondary"
+            name="ispublic"
+          />
+          <CheckSwitch
+            label="destructive"
+            type="switch"
+            variant="destructive"
+            name="ispublic"
+          />
+          <CheckSwitch
+            label="muted"
+            type="switch"
+            variant="muted"
+            name="ispublic"
+          />
         </div>
 
         {folder.type === 'file' ? (
@@ -138,6 +161,7 @@ export default function PostEdit() {
             name="content"
             defaultValue={post?.content}
             placeholder="content..."
+            className={`bg-${post?.isprivate ? 'red-900' : 'blue-900'}`}
           />
         )}
 

@@ -11,26 +11,19 @@ type Props = {
   name?: string;
   label?: string;
   checked?: boolean;
-  setCheckedAction?: (checked: boolean) => void;
   variant?: 'default' | 'destructive' | 'secondary' | 'muted';
+  setCheckedAction?: (checked: boolean) => void;
 };
-
-const dynamicCss = [
-  'bg-desructive',
-  'text-destructive-foreground',
-  'bg-destructive',
-];
 
 const setClassnames = (variant: Props['variant'] | 'primary') => [
   `border-${variant}`,
   `bg-${variant}`,
   `text-${variant}-foreground`,
-  `bg-${variant}`,
 ];
 
-const CheckVaraiant = {
+const CheckVariant = {
   default: setClassnames('primary'),
-  destructive: setClassnames('destructive'),
+  destructive: [...setClassnames('destructive'), 'text-white'],
   secondary: setClassnames('secondary'),
   muted: setClassnames('muted'),
 };
@@ -40,32 +33,36 @@ export default function CheckSwitch({
   name,
   label,
   checked,
-  setCheckedAction,
   variant = 'default',
+  setCheckedAction,
 }: Props) {
   const checkId = useId();
   const [isCheck, toggleCheck] = useReducer((p) => !p, !!checked);
 
+  const css = CheckVariant[variant];
+  console.log('*******', css);
+
   const Compo = type === 'switch' ? Switch : Checkbox;
 
-  const css = CheckVaraiant[variant];
-
   return (
-    <Label htmlFor={checkId} className="cursor-pointer">
+    <Label
+      htmlFor={checkId}
+      className="cursor-pointer text-secondary-foreground"
+    >
       <Compo
         id={checkId}
-        name={name}
         checked={isCheck}
         onClick={() => {
           toggleCheck();
           if (setCheckedAction) setCheckedAction(!isCheck);
         }}
-        className={cn({ ...css.map((cs) => `data-[state=checked]: ${cs}`) })}
+        // className="data-[state=checked]:border-secondary data-[state=checked]:bg-destructive data-[state=checked]:text-destructive-foreground data-[state=checked]:text-white"
+        className={cn(css.map((cs) => `data-[state=checked]:${cs}`))}
       />
-      {label} - {isCheck ? 'Checked' : 'UnChecked'}
+      {label}{' '}
       {!!name && (
         <input type="hidden" name={name} defaultValue={isCheck ? 'on' : ''} />
-      )}
+      )}{' '}
     </Label>
   );
 }
