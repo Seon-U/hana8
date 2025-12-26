@@ -82,6 +82,8 @@ export default function PostEdit() {
           <Input
             type="text"
             name="title"
+            //아래처럼 하면 값 수정이 input에서 안됨
+            // value={post?.title}
             defaultValue={post?.title}
             placeholder="title..."
           />
