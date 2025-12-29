@@ -2,12 +2,22 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { books } from './book.data';
 
 export async function GET(req: NextRequest) {
+  console.log('******', process.env.DB_PASSWD);
   const { searchParams } = req.nextUrl;
   const searchStr = searchParams.get('q') ?? '';
 
   return NextResponse.json(
     books.filter((book) => book.title.includes(searchStr)),
   );
+}
+
+export async function POST(req: NextRequest) {
+  const { title, writer } = await req.json();
+  const id = Math.max(...books.map((book) => book.id), 0) + 1;
+  const newer = { id, title, writer };
+  books.push(newer);
+
+  return NextResponse.json(newer);
 }
 
 export async function GET1(req: NextRequest) {
