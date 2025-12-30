@@ -10,8 +10,9 @@ export function proxy(req: NextRequest) {
 export const config = {
   // matcher: ['/photos', 'api/books/:path*'],
   matcher: [
-    '/((?!login|regist|_next/static|_next/image|auth|favicon.ico|robots.txt|images|api/books|$).*)',
+    '/admin',
+    // '/((?!login|regist|_next/static|_next/image|auth|favicon.ico|robots.txt|images|api/books|api/auth|$).*)',
     // '/api/:path*',
-    '/posts/:postId*/edit',
+    // '/posts/:postId*/edit',
   ],
 };

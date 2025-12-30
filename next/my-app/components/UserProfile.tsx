@@ -1,6 +1,9 @@
 'use client';
+import { redirect } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 // import d from '@/public/profile_dummy.png';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { logout } from '@/lib/sign.action';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
@@ -9,6 +12,10 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 const DummyProfileImage = '/profile_dummy.png';
 
 export default function UserProfile() {
+  const { data } = useSession();
+  if (!data || !data.user) redirect('/sign');
+
+  const profileImg = data.user.image || DummyProfileImage;
   const isMobile = useIsMobile();
 
   // const Comp = isMobile ? Popover : HoverCard;
@@ -36,7 +43,9 @@ export default function UserProfile() {
           className="touch-none md:pointer-events-auto md:touch-auto"
         >
           <Avatar>
-            <AvatarImage src={isMobile ? DummyProfileImage : undefined} />
+            <AvatarImage
+              src={isMobile ? DummyProfileImage : DummyProfileImage}
+            />
             <AvatarFallback className="text-xl">
               {'guest'.substring(0, 2)}
             </AvatarFallback>
@@ -52,12 +61,15 @@ export default function UserProfile() {
             </Avatar>
           </div>
           <div className="shrink-0 space-y-1">
-            <h4 className="font-semibold text-sm">@guest</h4>
-            <p className="text-muted-foreground text-sm">guest@gmail.com</p>
+            <h4 className="font-semibold text-sm">{data.user.name}</h4>
+            <p className="text-muted-foreground text-sm">{data.user.email}</p>
             <div className="text-muted-foreground text-xs">
               {12} Books
               {23} Marks 00 Followers
             </div>
+            <Button onClick={logout} variant={'outline'}>
+              SignOut
+            </Button>
           </div>
         </div>
       </Comp.content>

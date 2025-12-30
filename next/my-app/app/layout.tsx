@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Link from 'next/link';
+import { SessionProvider } from 'next-auth/react';
+import { use } from 'react';
 import { ModeToggle } from '@/components/ModeToggler';
 import { ThemeProvider } from '@/components/theme-provider';
 import UserProfile from '@/components/UserProfile';
-import { Button } from '@/components/ui/button';
+import { auth } from '@/lib/auth';
 import './globals.css';
 
 const geistSans = Geist({
@@ -27,35 +29,46 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = use(auth());
+  if (!session?.user) console.log('no user');
+  console.log('🚀 ~ session:', session?.user);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} mx-5 antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <nav className="flex items-center justify-between">
-            <div>
-              Navigator <Link href={'/hello'}>Hello</Link> |
-              <Link href={'/hi'}>Hi</Link> |<Link href={'/shop/123'}>123</Link>|
-              <Link href={'/shop/123/456'}>123-456</Link> |
-              <Link href={'/about'}>About</Link> |
-              <Link href={'/photos'}>Photos</Link> |
-              <Link href={'/caches'}>Caches</Link> |
-              <Button variant={'apply'}>SignIn</Button>
-            </div>
-            <div className="flex items-center">
-              <ModeToggle />
-              <UserProfile />
-            </div>
-          </nav>
-          <div className="border p-3">{children}</div>
-          <footer className="text-center">Footer</footer>
-        </ThemeProvider>
+        <SessionProvider session={session}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <nav className="flex items-center justify-between">
+              <div>
+                Navigator <Link href={'/hello'}>Hello</Link> |
+                <Link href={'/hi'}>Hi</Link> |
+                <Link href={'/shop/123'}>123</Link>|
+                <Link href={'/shop/123/456'}>123-456</Link> |
+                <Link href={'/about'}>About</Link> |
+                <Link href={'/photos'}>Photos</Link> |
+                <Link href={'/caches'}>Caches</Link> |
+                {session?.user ? (
+                  <Link href={'/api/auth/signout'}>{session.user.name}</Link>
+                ) : (
+                  <Link href={'/sign'}>SignIn</Link>
+                )}
+              </div>
+              <div className="flex items-center">
+                <ModeToggle />
+                {session?.user && <UserProfile />}
+              </div>
+            </nav>
+            <div className="border p-3">{children}</div>
+            <footer className="text-center">Footer</footer>
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );
