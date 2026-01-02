@@ -1,4 +1,4 @@
-'use cache';
+// 'use cache';
 
 export const generateStaticParams = async () => [{ time: 'morningX' }];
 

@@ -4,8 +4,10 @@ const nextConfig: NextConfig = {
   /* config options here */
   // basePath: '/post',
   reactCompiler: true,
-  cacheComponents: true,
-  experimental: { typedEnv: true },
+  // cacheComponents: true,
+  experimental: {
+    typedEnv: true,
+  },
   typedRoutes: true,
   images: {
     remotePatterns: [

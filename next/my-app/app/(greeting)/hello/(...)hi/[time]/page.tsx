@@ -1,4 +1,4 @@
-'use cache';
+// 'use cache';
 
 type Props = {
   params: Promise<{ time: 'moring' | 'afternoon' | 'evening' }>;
