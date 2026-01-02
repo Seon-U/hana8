@@ -11,20 +11,24 @@ export default function RegistForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('callbackUrl') || '/hello';
 
-  const defaultError = {
-    error: {},
-    data: {
-      email: 'sico@gmail.com',
-      name: 'sico',
-      passwd: '1212',
-      passwd2: '121',
-    },
-  };
+  const defaultError =
+    process.env.NODE_ENV === 'development'
+      ? {
+          error: {},
+          data: {
+            email: 'sico@gmail.com',
+            name: 'sico',
+            passwd: '1212',
+            passwd2: '1212',
+          },
+        }
+      : undefined;
 
   const [validError, makeRegist, isPending] = useActionState(
     regist,
     defaultError,
   );
+  if (validError) console.log('validError>>', validError);
 
   return (
     <div className="grid place-items-center">
