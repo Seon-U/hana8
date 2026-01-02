@@ -11,11 +11,24 @@ export default function RegistForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('callbackUrl') || '/hello';
 
-  const [validError, login, isPending] = useActionState(regist, undefined);
+  const defaultError = {
+    error: {},
+    data: {
+      email: 'sico@gmail.com',
+      name: 'sico',
+      passwd: '1212',
+      passwd2: '121',
+    },
+  };
+
+  const [validError, makeRegist, isPending] = useActionState(
+    regist,
+    defaultError,
+  );
 
   return (
     <div className="grid place-items-center">
-      <form action={login} className="w-full space-y-3">
+      <form action={makeRegist} className="w-full space-y-3">
         <input type="hidden" name="redirectTo" value={redirectTo} />
 
         <div className="space-y-1">
