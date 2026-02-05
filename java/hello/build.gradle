@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'checkstyle'
+}
+
+// 회사 company 약자로 쓰는 경우 많음
+group = 'com.hana8.hello'
+version = '1.0-SNAPSHOT'
+
+// 외부 라이브러리 인스톨로 받음. 메인에서 받아오겠다
+// 폐쇄망 들어가게 되면 리포지토리 자체 구축 회사도 있음
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// 기본적 테스트 플랫폼 쥬비퍼가 들어가있음
+// 자바는 다 jvm 기반이고 assert따라 다
+test {
+    useJUnitPlatform()
+}
+
+/* =========================
+   Checkstyle 설정 추가 부분
+   ========================= */
+
+checkstyle {
+    toolVersion = '13.01.0'
+    configFile = file('../checkstyle/naver-checkstyle-rules.xml')
+}
+
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = false
+        html.required = true
+    }
+}
