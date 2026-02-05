@@ -7,3 +7,5 @@ coverage
 .idea
 dist
 sql/backup*
+java/codestyle/*
+.DS_STORE
