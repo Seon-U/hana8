@@ -3,7 +3,8 @@ package com.hana8.hello.trythis;
 public class FillSnail {
 	@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 	public static void main(String[] args) {
-		printTwodeps(makeSnail(5));
+		// printTwodeps(makeSnail(5));
+		makeTriangleSnail(5);
 		// int MAX_NUM = 5;
 		// int[] arr = new int[MAX_NUM * MAX_NUM];
 		//
@@ -50,5 +51,42 @@ public class FillSnail {
 			}
 			System.out.println();
 		}
+	}
+
+	@SuppressWarnings("checkstyle:ParameterName")
+	public static int[] makeTriangleSnail(int N) {
+		int[] result = new int[N * (N + 1) / 2];
+		int[][] snails = new int[N][N];
+
+		int garo = 0;
+		int sero = -1;
+		int val = 0;
+
+		for (int i = 0; i < N; i++) {
+			for (int j = i; j < N; j++) {
+				if (i % 3 == 0) {
+					sero++;
+				} else if (i % 3 == 1) {
+					garo++;
+				} else {
+					sero--;
+					garo--;
+				}
+				snails[sero][garo] = ++val;
+			}
+		}
+
+		int idx = 0;
+		for (int i = 0; i < N; i++) {
+			System.out.print(" ".repeat(N - i));
+			for (int j = 0; j <= i; j++) {
+				System.out.printf("%3d", snails[i][j]);
+				result[idx++] = snails[i][j];
+			}
+			System.out.println();
+		}
+
+		// System.out.println("Arrays.deepToString()" + Arrays.deepToString(result));
+		return result;
 	}
 }

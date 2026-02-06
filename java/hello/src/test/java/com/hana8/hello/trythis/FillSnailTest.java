@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class FillSnailTest {
-	
+
 	@Test
 	void makeSnail1() {
 		int[][] expected = {{1}};
@@ -34,4 +34,14 @@ class FillSnailTest {
 		}
 	}
 
+	@Test
+	void makeTriangleSnail() {
+		int[] arr4 = {1, 2, 9, 3, 10, 8, 4, 5, 6, 7};
+		int[] arr5 = {1, 2, 12, 3, 13, 11, 4, 14, 15, 10, 5, 6, 7, 8, 9};
+		int[] arr6 = {1, 2, 15, 3, 16, 14, 4, 17, 21, 13, 5, 18, 19, 20, 12, 6, 7, 8, 9, 10, 11};
+
+		assertArrayEquals(arr4, FillSnail.makeTriangleSnail(4));
+		assertArrayEquals(arr5, FillSnail.makeTriangleSnail(5));
+		assertArrayEquals(arr6, FillSnail.makeTriangleSnail(6));
+	}
 }
