@@ -1,6 +1,35 @@
 package com.hana8.hello.trythis;
 
 public class StringLogParser {
+	public static String[] splitLog(String log) {
+		for (String l : log.split("\n")) {
+			l.split(" ", 5);
+
+		}
+		return log.split("\n");
+	}
+
+	public static int[] errorCnt(String[] type, String[] logs) {
+		int errorCnt = 0;
+		int infoCnt = 0;
+		int warnCnt = 0;
+		for (String l : logs) {
+			String logType = l.split(" ", 5)[3];
+			switch (logType) {
+				case "ERROR" -> errorCnt++;
+				case "INFO" -> infoCnt++;
+				case "WARN" -> warnCnt++;
+			}
+		}
+		return new int[] {errorCnt, infoCnt, warnCnt};
+	}
+
+	// public static String[] getService(String[] logs) {
+	// 	for (String l : logs) {
+	// 		String service = l.split(" ", 5)[3].replace(":", "");
+	// 	}
+	// }
+
 	public static void main(String[] args) {
 		String log = """
 			2024-02-05 09:15:23 ERROR UserService: Login failed for user admin
