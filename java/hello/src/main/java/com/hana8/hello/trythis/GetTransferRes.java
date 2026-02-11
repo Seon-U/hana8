@@ -1,25 +1,22 @@
 package com.hana8.hello.trythis;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class GetTransferRes {
 	public static void main(String[] args) {
-		ArrayList<TransferLog> logs = new ArrayList<>();
-		// 1001,Hong,Choi,5000
-		// 1002,Lee,Park,20000
-		// 1003,Hong,Jade,10000
-		// 1004,Kim,Park,20000
-		// 1005,Lee,Choi,5000
-		// 1006,Hong,Choi,5000
-		logs.add(new TransferLog(1001, "Hong", "Choi", 5000));
-		logs.add(new TransferLog(1002, "Lee", "Park", 20000));
-		logs.add(new TransferLog(1003, "Hong", "Jade", 10000));
-		logs.add(new TransferLog(1004, "Kim", "Park", 20000));
-		logs.add(new TransferLog(1005, "Lee", "Choi", 5000));
-		logs.add(new TransferLog(1006, "Hong", "Choi", 5000));
-
-		// System.out.println(logs);
+		String logline = """
+				1001,Hong,Choi,5000
+				1002,Lee,Park,20000
+				1003,Hong,Jade,10000
+				1004,Kim,Park,20000
+				1005,Lee,Choi,5000
+				1006,Hong,Choi,5000
+			""";
+		ArrayList<TransferLog> logs = getTransferLogs(logline);
 
 		// sender list and receiver list
 		printRecieverSenderList(logs);
@@ -31,21 +28,20 @@ public class GetTransferRes {
 	}
 
 	private static void printMaxReciever(ArrayList<TransferLog> logs) {
-		HashSet<String> recieverSet = new HashSet<>();
+		HashMap<String, BigDecimal> recieverMap = new HashMap<>();
 		for (TransferLog log : logs) {
-			recieverSet.add(log.receiver);
+			if (recieverMap.get(log.receiver) == null) {
+				recieverMap.put(log.receiver, log.amount);
+			} else {
+				recieverMap.put(log.receiver, recieverMap.get(log.receiver).add(log.amount));
+			}
 		}
 
-		double maxMoney = 0;
+		BigDecimal maxMoney = new BigDecimal(0);
 		String maxMoneyReciever = "";
-		for (String receiver : recieverSet) {
-			double money = 0;
-			for (TransferLog log : logs) {
-				if (receiver.equals(log.receiver)) {
-					money += log.amount;
-				}
-			}
-			if (maxMoney < money) {
+		for (String receiver : recieverMap.keySet()) {
+			BigDecimal money = recieverMap.get(receiver);
+			if (maxMoney.compareTo(money) < 0) {
 				maxMoney = money;
 				maxMoneyReciever = receiver;
 			}
@@ -53,50 +49,65 @@ public class GetTransferRes {
 		System.out.printf("%s (%.0f원)", maxMoneyReciever, maxMoney);
 	}
 
+	private static ArrayList<TransferLog> getTransferLogs(String logline) {
+		ArrayList<TransferLog> logs = new ArrayList<>();
+		String[] loglines = logline.trim().split("\n");
+		for (String log : loglines) {
+			String[] splitedLog = log.trim().split(",");
+			logs.add(new TransferLog(Integer.parseInt(splitedLog[0]), splitedLog[1], splitedLog[2],
+				new BigDecimal(splitedLog[3])));
+		}
+
+		System.out.println(logs);
+		return logs;
+	}
+
 	private static void printMaxSender(ArrayList<TransferLog> logs) {
-		HashSet<String> senderSet = new HashSet<>();
-		for (TransferLog log : logs) {
-			senderSet.add(log.sender);
-		}
+		HashMap<String, SenderStat> senderStatMap = new HashMap<>();
 		int maxCount = 0;
-		String maxSender = "";
-		String maxMoneySender = "";
-		double maxMoney = 0;
-		for (String sender : senderSet) {
-			int count = 0;
-			double money = 0;
-			for (TransferLog log : logs) {
-				if (sender.equals(log.sender)) {
-					count++;
-					money += log.amount;
-				}
-			}
-			if (maxCount < count) {
-				maxCount = count;
-				maxSender = sender;
-			}
-			if (maxMoney < money) {
-				maxMoney = money;
-				maxMoneySender = sender;
+		BigDecimal maxTotalAmount = new BigDecimal(0);
+		String maxTotalAmountSender = "";
+		String maxCountSender = "";
+
+		for (TransferLog log : logs) {
+			if (senderStatMap.get(log.sender) == null) {
+				senderStatMap.put(log.sender, new SenderStat(1, log.amount));
+			} else {
+				senderStatMap.get(log.sender).count++;
+				senderStatMap.get(log.sender).totalAmount = senderStatMap.get(log.sender).totalAmount.add(log.amount);
 			}
 		}
-		System.out.printf("자주: %s (%d회), 최고금액: %s (%.0f원)%n", maxSender, maxCount, maxMoneySender, maxMoney);
+
+		for (String sender : senderStatMap.keySet()) {
+			SenderStat stat = senderStatMap.get(sender);
+			if (stat.count > maxCount) {
+				maxCount = stat.count;
+				maxCountSender = sender;
+			}
+			if (stat.totalAmount.compareTo(maxTotalAmount) > 0) {
+				maxTotalAmount = stat.totalAmount;
+				maxTotalAmountSender = sender;
+			}
+		}
+		System.out.printf("자주: %s (%d회), 최고금액: %s (%s원)%n", maxCountSender, maxCount, maxTotalAmountSender,
+			maxTotalAmount);
 	}
 
 	private static void printRecieverSenderList(ArrayList<TransferLog> logs) {
-		HashSet<String> receiverList = new HashSet<>();
+		HashMap<String, Set<String>> receiverSenderMap = new HashMap<>();
+
 		for (TransferLog log : logs) {
-			receiverList.add(log.receiver);
+			Set<String> senderSet = receiverSenderMap.get(log.receiver);
+			if (senderSet == null) {
+				senderSet = new LinkedHashSet<String>();
+				receiverSenderMap.put(log.receiver, senderSet);
+			}
+			senderSet.add(log.sender);
 		}
 
-		for (String receiver : receiverList) {
-			HashSet<String> senderList = new HashSet<>();
+		for (String receiver : receiverSenderMap.keySet()) {
 			System.out.printf("%s: ", receiver);
-			for (TransferLog log : logs) {
-				if (receiver.equals(log.receiver)) {
-					senderList.add(log.sender);
-				}
-			}
+			Set<String> senderList = receiverSenderMap.get(receiver);
 			boolean isFirst = true;
 			for (String sender : senderList) {
 				if (isFirst) {
@@ -111,12 +122,12 @@ public class GetTransferRes {
 	}
 
 	public static class TransferLog {
-		int id;
-		String receiver;
-		String sender;
-		double amount;
+		private final int id;
+		private final String receiver;
+		private final String sender;
+		private final BigDecimal amount;
 
-		TransferLog(int id, String receiver, String sender, double amount) {
+		TransferLog(int id, String receiver, String sender, BigDecimal amount) {
 			this.id = id;
 			this.receiver = receiver;
 			this.sender = sender;
@@ -127,6 +138,16 @@ public class GetTransferRes {
 		public String toString() {
 			return "TransferLog{" + "id=" + id + ", sender='" + sender + '\'' + ", receiver='" + receiver + '\''
 				+ ", amount=" + amount + '}' + "\n";
+		}
+	}
+
+	public static class SenderStat {
+		int count;
+		BigDecimal totalAmount;
+
+		SenderStat(int count, BigDecimal totalAmount) {
+			this.count = count;
+			this.totalAmount = totalAmount;
 		}
 	}
 }
