@@ -121,19 +121,7 @@ public class GetTransferRes {
 		}
 	}
 
-	public static class TransferLog {
-		private final int id;
-		private final String receiver;
-		private final String sender;
-		private final BigDecimal amount;
-
-		TransferLog(int id, String receiver, String sender, BigDecimal amount) {
-			this.id = id;
-			this.receiver = receiver;
-			this.sender = sender;
-			this.amount = amount;
-		}
-
+	public record TransferLog(int id, String receiver, String sender, BigDecimal amount) {
 		@Override
 		public String toString() {
 			return "TransferLog{" + "id=" + id + ", sender='" + sender + '\'' + ", receiver='" + receiver + '\''
