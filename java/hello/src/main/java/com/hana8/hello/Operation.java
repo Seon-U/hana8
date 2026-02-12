@@ -1,41 +1,27 @@
 package com.hana8.hello;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.function.BinaryOperator;
 
 public enum Operation {
-	PLUS('+') {
-		@Override
-		public BigDecimal apply(BigDecimal v1, BigDecimal v2) {
-			return v1.add(v2);
-		}
-	}, MINUS('-') {
-		@Override
-		public BigDecimal apply(BigDecimal v1, BigDecimal v2) {
-			return v1.subtract(v2);
-		}
-	}, MULTIPLY('*') {
-		@Override
-		public BigDecimal apply(BigDecimal v1, BigDecimal v2) {
-			return v1.multiply(v2);
-		}
-	}, DIVIDE('/') {
-		@Override
-		public BigDecimal apply(BigDecimal v1, BigDecimal v2) {
-			return v1.divide(v2, RoundingMode.HALF_UP);
-		}
-	};
+	PLUS('+', BigDecimal::add),
+	MINUS('-', BigDecimal::subtract),
+	MULTIPLY('*', BigDecimal::multiply),
+	DIVIDE('/', BigDecimal::divide);
 
 	private final char cmd;
+	private final BinaryOperator<BigDecimal> fn;
 
-	Operation(char cmd) {
+	Operation(char cmd, BinaryOperator<BigDecimal> fn) {
 		this.cmd = cmd;
+		this.fn = fn;
 	}
 
 	public boolean isMe(char cmd) {
 		return this.cmd == cmd;
 	}
 
-	public abstract BigDecimal apply(BigDecimal v1, BigDecimal v2);
-
+	public BigDecimal apply(BigDecimal v1, BigDecimal v2) {
+		return fn.apply(v1, v2);
+	}
 }
