@@ -2,6 +2,7 @@ package com.hana8.hello;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -75,5 +76,42 @@ public class StreamPlay {
 			"list.stream().flatMap(s -> Stream.of(s.length(), s.length() + 1)).toList() = " + list.stream()
 				.flatMap(s -> Stream.of(s.length(), s.length() + 1))
 				.toList());
+
+		List<Integer> ttlist = List.of(1, 10, 6, 3, 3, 5, 4, 2, 7, 7, 9, 8, 10);
+		System.out.println(
+			"ttlist.stream().filter(i -> i % 2 == 0).count() = " + ttlist.stream().filter(i -> i % 2 == 0).count());
+		System.out.println("ttlist.stream().map(i-> i*i).toList() = " + ttlist.stream().map(i -> i * i).toList());
+		System.out.println("ttlist.stream().distinct().toList() = " + ttlist.stream().distinct().toList());
+		System.out.println(
+			"ttlist.stream().collect(Collectors.toSet()) = " + new HashSet<>(ttlist));
+
+		System.out.println("ttlist.stream().sorted().toList() = " + ttlist.stream().sorted().toList());
+		System.out.println(
+			"ttlist.stream().sorted(Comparator.reverseOrder()) = " + ttlist.stream()
+				.sorted(Comparator.reverseOrder())
+				.toList());
+		System.out.println("ttlist.stream().limit(5).toList() = " + ttlist.stream().limit(5).toList());
+		System.out.println("ttlist.stream().skip(5).toList() = " + ttlist.stream().skip(5).toList());
+		System.out.println(
+			"ttlist.stream().filter(i -> i > 5).toList() = " + ttlist.stream().filter(i -> i > 5).toList());
+		System.out.println(
+			"ttlist.stream().dropWhile(i -> i <= 5).toList() = " + ttlist.stream().dropWhile(i -> i <= 5).toList());
+		System.out.println("IntStream.rangeClosed(1, 10).sum() = " + IntStream.rangeClosed(1, 10).sum());
+
+		// ttlist.stream().limit(5).map(Math::random);
+		// IntStream.range(1, 6).map(Math::random);
+		// Stream.generate(Math::random).limit(5);
+
+		System.out.println("ttlist.stream().limit(5).mapToDouble(i -> Math.random()).average() = " + ttlist.stream()
+			.limit(5)
+			.mapToDouble(i -> Math.random())
+			.average());
+
+		IntStream.range(1, 6).mapToDouble(i -> Math.random()).average().orElse(-1);
+
+		Stream.generate(Math::random).mapToDouble(Double::valueOf).average().orElse(-1);
+
+		Stream.generate(Math::random).limit(5).map(d -> Math.round(d * 100.0) / 100).toList();
+
 	}
 }

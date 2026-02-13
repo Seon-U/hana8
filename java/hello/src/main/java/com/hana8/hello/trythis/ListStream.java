@@ -45,13 +45,13 @@ public class ListStream {
 		// 3번 그냥 1 + ....+ 10
 
 		System.out.print("random 5개의 평균: ");
-		System.out.println(returnRandomAvg());
+		System.out.println(returnRandomAvg(5));
 
 	}
 
-	public static Integer returnRandomAvg() {
+	public static Integer returnRandomAvg(int size) {
 		ArrayList<Integer> randomList = new ArrayList<>();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < size; i++) {
 			randomList.add((int)(Math.random() * 100));
 		}
 
