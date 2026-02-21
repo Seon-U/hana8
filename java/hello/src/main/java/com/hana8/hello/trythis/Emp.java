@@ -9,34 +9,21 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
+@ToString
 class Emp {
 	String name;
 	String dept;
 	int score;
-
-	Emp(String name, String dept, int score) {
-		this.name = name;
-		this.dept = dept;
-		this.score = score;
-	}
-
-	@Override
-	public String toString() {
-		return "%s (%d)".formatted(name, score);
-		// return "Emp{" + "name='" + name + '\'' + ", dept='" + dept + '\'' + ", score=" + score + '}';
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDept() {
-		return dept;
-	}
-
-	public int getScore() {
-		return score;
-	}
 
 	public void print() {
 		System.out.printf("%s: %s(%d)", dept, name, score);
