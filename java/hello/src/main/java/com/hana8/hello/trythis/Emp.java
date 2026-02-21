@@ -2,8 +2,11 @@ package com.hana8.hello.trythis;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 class Emp {
@@ -19,7 +22,8 @@ class Emp {
 
 	@Override
 	public String toString() {
-		return "Emp{" + "name='" + name + '\'' + ", dept='" + dept + '\'' + ", score=" + score + '}';
+		return "%s (%d)".formatted(name, score);
+		// return "Emp{" + "name='" + name + '\'' + ", dept='" + dept + '\'' + ", score=" + score + '}';
 	}
 
 	public String getName() {
@@ -32,6 +36,14 @@ class Emp {
 
 	public int getScore() {
 		return score;
+	}
+
+	public void print() {
+		System.out.printf("%s: %s(%d)", dept, name, score);
+	}
+
+	public void println() {
+		System.out.printf("%s: %s(%d)%n", dept, name, score);
 	}
 
 	public static void printEmpWithGroup(List<Emp> emplist, boolean reverse) {
@@ -59,16 +71,46 @@ class Emp {
 		List<Emp> overSeventy = emps.stream()
 			.filter(emp -> emp.score >= minLimit)
 			.toList();
+		List<Emp> candidates = emps.stream().filter(emp -> emp.getScore() >= 70).toList();
+		candidates.forEach(Emp::println);
 
+		var empsByDept = candidates.stream()
+			.sorted(Comparator.comparing(Emp::getDept, String::compareToIgnoreCase))
+			.collect(Collectors.groupingBy(Emp::getDept, LinkedHashMap::new, Collectors.toList()));
 		printEmpWithGroup(overSeventy, false);
 		System.out.println("----------------------------------------------------------------------------");
 
 		// 부서 별 최고 점수 1명만 남기기
-		Map<String, Emp> maxEmp = emps.stream().sorted(Comparator.comparing(Emp::getName))
+		LinkedHashMap<String, Optional<Emp>> maxScoreByDept = candidates.stream()
+			.sorted(Comparator.comparing(Emp::getDept))
+			.sorted(Comparator.comparing(Emp::getName))
+			.collect(Collectors.groupingBy(Emp::getDept, LinkedHashMap::new,
+				Collectors.maxBy(Comparator.comparingInt(Emp::getScore))));
+		System.out.println(maxScoreByDept);
+
+		Map<String, Emp> maxEmp = emps.stream().sorted(Comparator.comparing(Emp::getName).reversed())
 			.collect(Collectors.toMap(Emp::getDept, (e) -> e, (e1, e2) -> e1.score > e2.score ? e1 : e2));
 		List<Emp> maxEmpList = maxEmp.values().stream().toList();
 
 		printEmpWithGroup(maxEmpList, true);
+		LinkedHashMap<String, Optional<Emp>> maxScoreByDeptOrder = candidates.stream()
+			.sorted(Comparator.comparing(Emp::getDept).reversed())
+			.sorted(Comparator.comparing(Emp::getName))
+			.collect(Collectors.groupingBy(Emp::getDept, LinkedHashMap::new,
+				Collectors.maxBy(Comparator.comparing(Emp::getScore))));
+		System.out.println(maxScoreByDeptOrder);
+
+		Set<Map.Entry<String, Optional<Emp>>> entries = maxScoreByDeptOrder.entrySet();
+
+		for (Map.Entry<String, Optional<Emp>> entry : entries) {
+			String dept = entry.getKey();
+			Emp tEmp = entry.getValue().orElse(null);
+			if (tEmp == null) {
+				System.out.printf("%s: 최고 득점자 없음!%n", dept);
+			} else {
+				tEmp.println();
+			}
+		}
 		System.out.println("----------------------------------------------------------------------------");
 
 	}
