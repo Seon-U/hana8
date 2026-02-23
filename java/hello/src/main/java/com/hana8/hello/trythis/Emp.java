@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,9 +18,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-@ToString
+@ToString(exclude = "dept")
 class Emp {
 	String name;
 	String dept;
@@ -41,8 +43,14 @@ class Emp {
 		sortedList.forEach(e -> System.out.printf("%s: %s(%d)%n", e.dept, e.name, e.score));
 	}
 
+	public static EmpBuilder builder() {
+		return new EmpBuilder();
+	}
+
 	public static void main(String[] args) {
 		// 다음과 같이 직원들 목록이 있다.
+		Emp x = Emp.builder().name("Hong").dept("Sales").score(90).build();
+		System.out.println("x = " + x);
 		List<Emp> emps = Arrays.asList(
 			new Emp("Hong", "Sales", 85),
 			new Emp("Kim", "Sales", 95),
@@ -52,6 +60,7 @@ class Emp {
 			new Emp("Park", "IT", 92),
 			new Emp("Ahn", "Sales", 95)
 		);
+		emps.forEach(System.out::println);
 
 		// 	고과 점수가 70점 미만인 사람은 제외
 		int minLimit = 70;
