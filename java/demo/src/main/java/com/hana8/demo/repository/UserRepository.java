@@ -2,7 +2,6 @@ package com.hana8.demo.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -46,12 +45,18 @@ public class UserRepository {
 	}
 
 	public Integer deleteUser(Integer id) {
-		Optional<User> user = users.stream().filter(_user -> _user.getId() == id).findFirst();
-		if (user.isEmpty()) {
-			return 0;
-		}
-		user.ifPresent(users::remove);
-		return 1;
+		return users.stream().filter(_user -> _user.getId() == id).findFirst().map(user -> {
+			users.remove(user);
+			return 1;
+		}).orElse(0);
+
+		// return users.removeIf(user -> user.getId() == id) ? 1 : 0;
+		// Optional<User> user = users.stream().filter(_user -> _user.getId() == id).findFirst();
+		// if (user.isEmpty()) {
+		// 	return 0;
+		// }
+		// user.ifPresent(users::remove);
+		// return 1;
 	}
 
 	public User findUserById(Integer id) {
