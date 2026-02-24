@@ -1,8 +1,5 @@
 package com.hana8.demo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,8 +22,8 @@ public class HelloController {
 	@GetMapping("/hello-servlet")
 	public String helloServlet(String name) {
 		log.info("INFO: {} - {}", name, 123);
-		log.debug("DEBUG" + "xxx" + "yyy");
-		log.warn("WARN: www");
+		log.debug("DEBUG ");
+		log.warn("WARN: warn");
 		log.error("ERROR!!");
 		return "Hello~ " + name + "!!";
 	}
