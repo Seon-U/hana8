@@ -15,8 +15,8 @@ public class Nio {
 		// smallFile();
 		// bigFileRead();
 		// bigFileWrite();
-		// writeLyricsToFile();
-		readAndWrite();
+		writeLyricsToFile();
+		// readAndWrite();
 	}
 
 	private static void readAndWrite() throws IOException {

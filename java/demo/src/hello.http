@@ -1,0 +1,9 @@
+@baseUrl=http://localhost:8080
+
+GET {{baseUrl}}/
+
+### Hello
+GET {{baseUrl}}/hello
+
+### with query paparam
+GET {{baseUrl}}/hello-servlet?name=Hong
