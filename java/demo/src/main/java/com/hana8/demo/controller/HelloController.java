@@ -1,6 +1,7 @@
 package com.hana8.demo.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +12,8 @@ public class HelloController {
 	// private static final Logger log = LoggerFactory.getLogger(HelloController.class);
 
 	@GetMapping("/")
-	public String index() {
-		return "hana8 Demo";
+	public String index(@RequestHeader("User-Agent") String userAgent) {
+		return "hana8 Demo!" + userAgent;
 	}
 
 	@GetMapping("/hello")
