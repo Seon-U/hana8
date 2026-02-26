@@ -37,5 +37,8 @@ out/
 .vscode/
 
 *.log
+logs
 *security.properties
 *security.yml
+db.properties
+*.properties

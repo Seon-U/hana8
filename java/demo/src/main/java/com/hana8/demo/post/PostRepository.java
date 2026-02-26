@@ -9,4 +9,7 @@ public interface PostRepository {
 	public Post updatePost(PostEditDTO post);
 	public int deletePost(Long id);
 
+	void initialize();
+
+	void destroy();
 }

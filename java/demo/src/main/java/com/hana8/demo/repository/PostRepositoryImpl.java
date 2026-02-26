@@ -3,11 +3,11 @@ package com.hana8.demo.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import com.hana8.demo.dto.Post;
 
-@Service
+@Repository
 public class PostRepositoryImpl implements PostRepository {
 	private final List<Post> posts = new ArrayList<>();
 

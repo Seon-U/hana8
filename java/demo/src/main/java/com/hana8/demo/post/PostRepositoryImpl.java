@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Repository;
-
-@Repository("PostRepositoryT")
 public class PostRepositoryImpl implements PostRepository {
 	private final Map<Long, Post> posts = new HashMap<>();
 
@@ -27,7 +24,7 @@ public class PostRepositoryImpl implements PostRepository {
 		// newer.setId(id);
 		// newer.setTitle(post.getTitle());
 
-		Post newer = Post.builder().id(id).title(post.getTitle()).body(post.getBody()).build();
+		Post newer = Post.builder().id(id).title(post.getTitle()).body(post.getBody()).writer(post.getWriter()).build();
 
 		posts.put(id, newer);
 		return newer;
@@ -49,5 +46,14 @@ public class PostRepositoryImpl implements PostRepository {
 			return 0;
 		posts.remove(id);
 		return 1;
+	}
+
+	public void initialize() {
+		System.out.println("init: " + this + " / class = " + this.getClass());
+		// System.out.println("-----------PostRepositoryImpl initialized");
+	}
+
+	public void destroy() {
+		System.out.println("----------PostRepositoryImpl destroyed");
 	}
 }

@@ -1,4 +1,4 @@
-@baseUrl=http://localhost:8080/postsT
+@baseUrl=http://localhost:8080/postsT/list
 
 ### post list
 GET {{baseUrl}}/
@@ -9,8 +9,7 @@ Content-Type: application/json
 
 {
   "title": "title 1",
-  "body": "body 1",
-  "writer": "Hong"
+  "body": "body 1"
 }
 
 ### post-regist
