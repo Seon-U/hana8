@@ -30,6 +30,7 @@ public class UserRepository {
 			oldUser.setUsername(user.getUsername());
 			oldUser.setEmail(user.getEmail());
 			oldUser.setTel(user.getTel());
+			oldUser.setCreditCard(user.getCreditCard());
 
 		}).findFirst().orElse(null);
 

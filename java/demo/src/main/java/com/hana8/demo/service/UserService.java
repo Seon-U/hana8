@@ -20,10 +20,14 @@ public class UserService {
 	}
 
 	public Integer registUser(User user) {
+		user.replaceTelno();
+		user.replaceCardno();
 		return repository.createUser(user);
 	}
 
 	public User editUser(User user) {
+		user.replaceTelno();
+		user.replaceCardno();
 		return repository.updateUser(user);
 	}
 

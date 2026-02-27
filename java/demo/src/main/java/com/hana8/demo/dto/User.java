@@ -2,14 +2,21 @@ package com.hana8.demo.dto;
 
 import java.time.LocalDate;
 
+import com.hana8.demo.common.serializer.CardNoSerializer;
+import com.hana8.demo.common.serializer.TelnoSerializer;
+import com.hana8.demo.common.validator.CardNo;
+import com.hana8.demo.common.validator.Telno;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 @Data
 @Builder
@@ -32,5 +39,20 @@ public class User {
 	@Future
 	private LocalDate deletedt;
 
+	@NotNull
+	@Telno
+	@JsonSerialize(using = TelnoSerializer.class)
 	private String tel;
+
+	@CardNo
+	@JsonSerialize(using = CardNoSerializer.class)
+	private String creditCard;
+
+	public void replaceTelno() {
+		this.tel = this.tel.replaceAll("[\\s-]", "");
+	}
+
+	public void replaceCardno() {
+		this.creditCard = this.creditCard.replaceAll("[\\s-]", "");
+	}
 }

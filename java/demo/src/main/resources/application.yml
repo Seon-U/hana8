@@ -8,3 +8,7 @@ spring:
     restart:
       enabled: true
       additional-paths: src/main/java
+
+  web:
+    resources:
+      add-mappings: false

@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -46,6 +47,11 @@ public class ControllerExceptionHandler {
 					LinkedHashMap::new)
 			);
 		return ResponseEntity.badRequest().body(map);
+	}
+
+	@ExceptionHandler(NoHandlerFoundException.class)
+	public ResponseEntity<String> handleNoHandlerFoundExceptionHandler(NoHandlerFoundException e) {
+		return ResponseEntity.status(404).body("Not Found: " + e.getMessage());
 	}
 
 	@ExceptionHandler(Exception.class)
