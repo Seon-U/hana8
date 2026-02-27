@@ -16,10 +16,15 @@ public class CardNoSerializer extends StdSerializer<String> {
 			gen.writeNull();
 			return;
 		}
-		gen.writeString(format(value.replaceAll("[\\s-]",  "")));
-	}
+		String replStr = value.replaceAll("[\\s-]", "");
+		// 2️⃣ 앞 6자리 이후 ~ 마지막 4자리 전까지 마스킹
+		String masked = replStr
+			.replaceAll("(?<=\\d{6})\\d(?=\\d{4})", "*");
 
-	private String format(String cardNo) {
-		return cardNo.replaceAll("(\\d{4})(\\d{2})(\\d{6})(\\d{4})", "$1-$2**-****-$4");                   // 1588-1234
+		// 3️⃣ 4자리 단위 대시 추가
+		String formatted = masked
+			.replaceAll("(?<=\\G....)(?=.)", "-");
+
+		gen.writeString(formatted);
 	}
 }

@@ -15,7 +15,7 @@ Content-Type: application/json
   "email": "hong@mail.com",
   "comail": "hong@hanabank.com",
   "tel": "010-123-5678",
-  "creditCard": "1234 12 345 6785 678"
+  "creditCard": "1234 1234 5678 5670"
 }
 
 ### user-regist-2
