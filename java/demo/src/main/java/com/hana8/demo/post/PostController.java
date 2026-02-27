@@ -2,6 +2,7 @@ package com.hana8.demo.post;
 
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController( "postsT")
@@ -31,20 +33,21 @@ public class PostController {
 	}
 
 	@PostMapping("")
-	public Post addPost(HttpServletRequest req, @RequestBody PostAddDTO post) {
+	public Post addPost(HttpServletRequest req, @Valid @RequestBody PostDTO post) {
 		return service.addPost(post, isList(req));
 	}
 
 	@GetMapping("/{id}")
 	public Post getPost(HttpServletRequest req, @PathVariable Long id) {
-		if (id == 0L) {
-			throw new IllegalArgumentException("게시글 id는 0보다 커야 합니다!");
-		}
 		return service.getPost(id, isList(req));
 	}
 
 	@PutMapping("/{id}")
-	public Post editPost(HttpServletRequest req, @PathVariable Long id, @RequestBody PostEditDTO post) {
+	public Post editPost(HttpServletRequest req, @PathVariable Long id,
+		@Validated(PostDTO.OnUpdate.class) @RequestBody PostDTO post) {
+		if (id == 0L) {
+			throw new IllegalArgumentException("게시글 id는 0보다 커야 합니다!");
+		}
 		post.setId(id);
 		return service.editPost(post, isList(req));
 	}

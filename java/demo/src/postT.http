@@ -4,11 +4,12 @@
 GET {{baseUrl}}/
 
 ### post-regist
-POST {{baseUrl}}
+POST {{baseUrl}}/
 Content-Type: application/json
 
 {
-  "title": "title 1",
+  "title": "",
+  "writer": "aa",
   "body": "body 1"
 }
 
@@ -18,8 +19,8 @@ Content-Type: application/json
 
 {
   "title": "title - kim",
-  "body": "body - kim",
-  "writer": "Kim"
+  "writer": "Kim",
+  "body": "body - kim"
 }
 
 ### post-info

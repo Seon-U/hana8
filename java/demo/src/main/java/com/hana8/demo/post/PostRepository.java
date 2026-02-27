@@ -5,8 +5,8 @@ import java.util.List;
 public interface PostRepository {
 	public List<Post> findAll();
 	public Post find(Long id);
-	public Post createPost(PostAddDTO post);
-	public Post updatePost(PostEditDTO post);
+	public Post createPost(PostDTO post);
+	public Post updatePost(PostDTO post);
 	public int deletePost(Long id);
 
 	void initialize();

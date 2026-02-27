@@ -32,7 +32,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Post addPost(PostAddDTO post, boolean isList) {
+	public Post addPost(PostDTO post, boolean isList) {
 		if (post.getWriter() == null) {
 			post.setWriter(defaultWriter);
 		}
@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Post editPost(PostEditDTO post, boolean isList) {
+	public Post editPost(PostDTO post, boolean isList) {
 		return isList ? repositoryList.updatePost(post) : repository.updatePost(post);
 	}
 

@@ -13,6 +13,7 @@ Content-Type: application/json
 {
   "username": "Hong",
   "email": "hong@mail.com",
+  "comail": "hong@hanabank.com",
   "tel": "010-1234-5678"
 }
 
