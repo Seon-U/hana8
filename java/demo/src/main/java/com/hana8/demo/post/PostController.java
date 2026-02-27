@@ -37,6 +37,9 @@ public class PostController {
 
 	@GetMapping("/{id}")
 	public Post getPost(HttpServletRequest req, @PathVariable Long id) {
+		if (id == 0L) {
+			throw new IllegalArgumentException("게시글 id는 0보다 커야 합니다!");
+		}
 		return service.getPost(id, isList(req));
 	}
 
