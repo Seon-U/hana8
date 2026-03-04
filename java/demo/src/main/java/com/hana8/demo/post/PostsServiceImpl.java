@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 
 // @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @RequiredArgsConstructor
-public class PostServiceImpl implements PostService {
-	private final PostRepository repository;
-	private final PostRepository repositoryList;
+public class PostsServiceImpl implements PostsService {
+	private final PostsRepository repository;
+	private final PostsRepository repositoryList;
 
 	@Value("${default.writer}")
 	private String defaultWriter;
@@ -22,17 +22,17 @@ public class PostServiceImpl implements PostService {
 	// }
 
 	@Override
-	public List<Post> getList(boolean isList) {
+	public List<Posts> getList(boolean isList) {
 		return isList ? repositoryList.findAll() : repository.findAll();
 	}
 
 	@Override
-	public Post getPost(Long id, boolean isList) {
+	public Posts getPost(Long id, boolean isList) {
 		return isList ? repositoryList.find(id) : repository.find(id);
 	}
 
 	@Override
-	public Post addPost(PostDTO post, boolean isList) {
+	public Posts addPost(PostDTO post, boolean isList) {
 		if (post.getWriter() == null) {
 			post.setWriter(defaultWriter);
 		}
@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public Post editPost(PostDTO post, boolean isList) {
+	public Posts editPost(PostDTO post, boolean isList) {
 		return isList ? repositoryList.updatePost(post) : repository.updatePost(post);
 	}
 

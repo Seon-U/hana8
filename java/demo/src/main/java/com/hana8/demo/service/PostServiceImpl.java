@@ -4,34 +4,34 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.hana8.demo.dto.Post;
-import com.hana8.demo.repository.PostRepository;
+import com.hana8.demo.dto.Posts;
+import com.hana8.demo.repository.PostsRepository;
 
 @Service
 public class PostServiceImpl implements PostService {
-	public final PostRepository repository;
+	public final PostsRepository repository;
 
-	public PostServiceImpl(PostRepository repository) {
+	public PostServiceImpl(PostsRepository repository) {
 		this.repository = repository;
 	}
 
 	@Override
-	public List<Post> getList() {
+	public List<Posts> getList() {
 		return repository.findAllPost();
 	}
 
 	@Override
-	public Post getPost(Integer id) {
+	public Posts getPost(Integer id) {
 		return repository.findPostById(id);
 	}
 
 	@Override
-	public Integer createPost(Post post) {
+	public Integer createPost(Posts post) {
 		return repository.createPost(post);
 	}
 
 	@Override
-	public Post editPost(Post post) {
+	public Posts editPost(Posts post) {
 		return repository.updatePost(post);
 	}
 

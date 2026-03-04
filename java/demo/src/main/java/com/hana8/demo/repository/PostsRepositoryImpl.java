@@ -5,32 +5,32 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.hana8.demo.dto.Post;
+import com.hana8.demo.dto.Posts;
 
 @Repository
-public class PostRepositoryImpl implements PostRepository {
-	private final List<Post> posts = new ArrayList<>();
+public class PostsRepositoryImpl implements PostsRepository {
+	private final List<Posts> posts = new ArrayList<>();
 
 	@Override
-	public List<Post> findAllPost() {
+	public List<Posts> findAllPost() {
 		return posts;
 	}
 
 	@Override
-	public Post findPostById(Integer id) {
+	public Posts findPostById(Integer id) {
 		return posts.stream().filter(post -> post.getId() == id).findFirst().orElse(null);
 	}
 
 	@Override
-	public Integer createPost(Post post) {
-		int id = posts.stream().mapToInt(Post::getId).max().orElse(0) + 1;
+	public Integer createPost(Posts post) {
+		int id = posts.stream().mapToInt(Posts::getId).max().orElse(0) + 1;
 		post.setId(id);
 		posts.add(post);
 		return id;
 	}
 
 	@Override
-	public Post updatePost(Post post) {
+	public Posts updatePost(Posts post) {
 		return posts.stream().filter(p -> p.getId() == post.getId()).findFirst().map(oldPost -> {
 			oldPost.setTitle(post.getTitle());
 			oldPost.setContent(post.getContent());

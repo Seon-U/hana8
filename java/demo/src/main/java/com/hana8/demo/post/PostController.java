@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping({"/postsT", "/postsT/list" })
 @RequiredArgsConstructor
 public class PostController {
-	private final PostService service;
+	private final PostsService service;
 	private final com.hana8.demo.service.PostService postService;
 
 	private boolean isList(HttpServletRequest req) {
@@ -28,22 +28,22 @@ public class PostController {
 	}
 
 	@GetMapping("")
-	public List<Post> getPosts(HttpServletRequest req) {
+	public List<Posts> getPosts(HttpServletRequest req) {
 		return service.getList(isList(req));
 	}
 
 	@PostMapping("")
-	public Post addPost(HttpServletRequest req, @Valid @RequestBody PostDTO post) {
+	public Posts addPost(HttpServletRequest req, @Valid @RequestBody PostDTO post) {
 		return service.addPost(post, isList(req));
 	}
 
 	@GetMapping("/{id}")
-	public Post getPost(HttpServletRequest req, @PathVariable Long id) {
+	public Posts getPost(HttpServletRequest req, @PathVariable Long id) {
 		return service.getPost(id, isList(req));
 	}
 
 	@PutMapping("/{id}")
-	public Post editPost(HttpServletRequest req, @PathVariable Long id,
+	public Posts editPost(HttpServletRequest req, @PathVariable Long id,
 		@Validated(PostDTO.OnUpdate.class) @RequestBody PostDTO post) {
 		if (id == 0L) {
 			throw new IllegalArgumentException("게시글 id는 0보다 커야 합니다!");

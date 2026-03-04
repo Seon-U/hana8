@@ -2,16 +2,16 @@ package com.hana8.demo.service;
 
 import java.util.List;
 
-import com.hana8.demo.dto.Post;
+import com.hana8.demo.dto.Posts;
 
 public interface PostService {
-	List<Post> getList();
+	List<Posts> getList();
 
-	Post getPost(Integer id);
+	Posts getPost(Integer id);
 
-	Integer createPost(Post post);
+	Integer createPost(Posts post);
 
-	Post editPost(Post post);
+	Posts editPost(Posts post);
 
 	Integer deletePost(Integer id);
 }

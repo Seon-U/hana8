@@ -16,9 +16,11 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Getter
 @Entity
 @Table(name = "Member", uniqueConstraints = @UniqueConstraint(
 	name = "uniq_Member_email",
@@ -38,7 +40,7 @@ public class Member extends BaseEntity {
 	@Column(nullable = false, length = 30)
 	private String nickname;
 
-	@Column(nullable = false, length = 255)
+	@Column(nullable = false)
 	private String email;
 
 	// @Column(nullable = false, length = 128)

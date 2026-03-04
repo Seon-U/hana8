@@ -8,21 +8,19 @@ spring:
     username: hana8
     password: Hana8db!!
 
-  flyway:
-    enabled: false
-    baseline-on-migrate: true
-
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    show-sql: true
-    defer-datasource-initialization: true
+
+    #    show-sql: true
+    defer-datasource-initialization: false
+
     properties:
       hibernate:
         jdbc:
-          batch_size: 50
+          batch_size: 10
           time_zone: Asia/Seoul
         order_inserts: true
         order_updates: true
@@ -31,15 +29,15 @@ spring:
 
   sql:
     init:
-      mode: always #always -> never
+      mode: never
 
-  #  devtools:
+  web:
+    resources:
+      add-mappings: false
+
+#  devtools:
 #    livereload:
 #      enabled: true
 #    restart:
 #      enabled: true
 #      additional-paths: src/main/java
-
-  web:
-    resources:
-      add-mappings: false

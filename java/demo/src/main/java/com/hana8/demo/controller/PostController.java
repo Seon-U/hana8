@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hana8.demo.dto.Post;
+import com.hana8.demo.dto.Posts;
 import com.hana8.demo.service.PostService;
 
 @RestController("/posts")
@@ -24,22 +24,22 @@ public class PostController {
 	}
 
 	@GetMapping("")
-	public List<Post> getPostList() {
+	public List<Posts> getPostList() {
 		return service.getList();
 	}
 
 	@GetMapping("/{id}")
-	public Post getPost(@PathVariable Integer id) {
+	public Posts getPost(@PathVariable Integer id) {
 		return service.getPost(id);
 	}
 
 	@PostMapping("")
-	public Integer createPost(@RequestBody Post post) {
+	public Integer createPost(@RequestBody Posts post) {
 		return service.createPost(post);
 	}
 
 	@PutMapping("/{id}")
-	public Post editPost(@PathVariable("id") Integer id, @RequestBody Post post) {
+	public Posts editPost(@PathVariable("id") Integer id, @RequestBody Posts post) {
 		post.setId(id);
 		return service.editPost(post);
 	}
