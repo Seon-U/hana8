@@ -1,7 +1,9 @@
 package com.hana8.demo.entity;
 
-import io.hypersistence.utils.hibernate.id.Tsid;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,12 +24,23 @@ public class Post extends BaseEntity {
 	// @GeneratedValue(strategy = GenerationType.UUID)
 	// @UuidGenerator(style = UuidGenerator.Style.RANDOM)
 	// @UuidGenerator
-	@Tsid
+	// @Tsid
+	@Column(updatable = false, columnDefinition = "int unsigned")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false)
 	private String title;
 
-	public Post(String title) {
+	@Column(length = 2000)
+	private String body;
+
+	@Column(nullable = false, length = 31)
+	private String writer;
+
+	public Post(String title, String writer) {
 		this.title = title;
+		this.writer = writer;
+		this.body = "body of" + title;
 	}
 }
