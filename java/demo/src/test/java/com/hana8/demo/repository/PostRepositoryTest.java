@@ -2,6 +2,7 @@ package com.hana8.demo.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.LongStream;
@@ -30,6 +31,18 @@ class PostRepositoryTest extends BaseRepositoryTest {
 			orgCnt = repository.count();
 	}
 
+	@Test
+	void jpqlTest() {
+		List<Post> byIdBetween = repository.findByIdBetween(10L, 20L);
+		byIdBetween.stream().map(p -> p.getId() + " : " + p.getTitle()).forEach(System.out::println);
+
+		List<Post> byAny = repository.findByAny(10, 20);
+		byAny.stream().map(p -> p.getId() + " : " + p.getTitle()).forEach(System.out::println);
+
+		List<Object[]> strings = repository.sortByCreatedAtAndTitle(10, 20);
+		strings.forEach(a -> System.out.println(Arrays.toString(a)));
+	}
+
 	// @Test
 	void createAllTest() {
 		long cnt = repository.count();
@@ -51,10 +64,15 @@ class PostRepositoryTest extends BaseRepositoryTest {
 	void pagingTest() {
 		Sort sort = Sort.by("id").descending();
 		Pageable pager = PageRequest.of(0, 10, sort);
+		// Sort sort1 = Sort.by("createdAt").descending();
+		// Sort sort2 = Sort.by("title").ascending();
+		// Pageable pager = PageRequest.of(0, 10, sort1.and(sort2));
 
 		Page<Post> page1 = repository.findAll(pager);
 		List<Post> posts = page1.getContent();
 		posts.stream().mapToLong(Post::getId).forEach(System.out::println);
+		// posts.forEach(p -> System.out.println(p.getCreatedAt() + " -- " + p.getTitle()));
+
 		System.out.println("page1.getTotalPages() = " + page1.getTotalPages());
 		assertThat(page1.getTotalPages()).isEqualTo(repository.count() / 10);
 		System.out.println("page1.getNumber() = " + page1.getNumber());
@@ -91,6 +109,7 @@ class PostRepositoryTest extends BaseRepositoryTest {
 				assertThat(p.getTitle()).contains("Title8")
 			);
 	}
+
 
 	@Test
 	@Order(1)

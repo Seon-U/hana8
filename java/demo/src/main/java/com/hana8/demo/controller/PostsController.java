@@ -16,10 +16,10 @@ import com.hana8.demo.service.PostService;
 
 @RestController("/posts")
 @RequestMapping("/posts")
-public class PostController {
+public class PostsController {
 	private final PostService service;
 
-	public PostController(PostService postService) {
+	public PostsController(PostService postService) {
 		this.service = postService;
 	}
 
