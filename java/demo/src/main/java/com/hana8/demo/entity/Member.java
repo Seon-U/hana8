@@ -15,12 +15,13 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Getter
+
+@Data
 @Entity
 @Table(name = "Member", uniqueConstraints = @UniqueConstraint(
 	name = "uniq_Member_email",
