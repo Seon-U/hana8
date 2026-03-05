@@ -47,10 +47,8 @@ public class Member extends BaseEntity {
 	// @Column(nullable = false, length = 128)
 	private String passwd;
 
-	@Builder.Default
 	@ColumnDefault( "false")
-	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-	private Boolean isActive = false;
+	private Boolean isActive;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)

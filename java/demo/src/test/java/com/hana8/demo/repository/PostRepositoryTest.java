@@ -46,7 +46,7 @@ class PostRepositoryTest extends BaseRepositoryTest {
 	// @Test
 	void createAllTest() {
 		long cnt = repository.count();
-		List<Post> posts = LongStream.rangeClosed(4, 100)
+		List<Post> posts = LongStream.rangeClosed(1, 100)
 			.mapToObj(l -> Post.builder()
 				.title("Title" + l)
 				.body("body of " + l)
@@ -56,7 +56,7 @@ class PostRepositoryTest extends BaseRepositoryTest {
 
 		repository.saveAll(posts);
 
-		assertThat(repository.count()).isEqualTo(cnt + 97);
+		assertThat(repository.count()).isEqualTo(cnt + 100);
 	}
 
 

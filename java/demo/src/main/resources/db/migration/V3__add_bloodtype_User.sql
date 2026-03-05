@@ -25,3 +25,9 @@ create table Post (
   body varchar(2000),
   primary key (id)
 );
+
+
+insert into Post (title, writer, body)
+values ('Title1', 'hong', 'body of Title1'),
+       ('Title2', 'kim', 'body of Title2'),
+       ('Title3', 'lee', 'body of Title3');

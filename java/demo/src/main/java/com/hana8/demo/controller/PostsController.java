@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hana8.demo.dto.Posts;
-import com.hana8.demo.service.PostService;
+import com.hana8.demo.service.PostsService;
 
-@RestController("/posts")
-@RequestMapping("/posts")
+@RestController("/postsM")
+@RequestMapping("/postsM")
 public class PostsController {
-	private final PostService service;
+	private final PostsService service;
 
-	public PostsController(PostService postService) {
+	public PostsController(PostsService postService) {
 		this.service = postService;
 	}
 

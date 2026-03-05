@@ -1,0 +1,42 @@
+@baseUrl=http://localhost:8080/api/posts
+
+### post list
+GET {{baseUrl}}?page=1&pageSize=5
+
+### post-regist
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "title": "plz delete",
+  "writer": "pppppppppppppppppppppppp",
+  "body": "body 1"
+}
+
+### post-regist
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "title": "title - kim",
+  "writer": "Kim",
+  "body": "body - kim"
+}
+
+### post-info
+GET {{baseUrl}}/101
+
+
+### post-update
+PUT {{baseUrl}}/101
+Content-Type: application/json
+
+{
+  "id": 101,
+  "title": "title 1xxx",
+  "body": "body 1xxx",
+  "writer": "Hongxxx"
+}
+
+### post-remove
+DELETE {{baseUrl}}/101

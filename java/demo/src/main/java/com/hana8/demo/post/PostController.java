@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostController {
 	private final PostsService service;
-	private final com.hana8.demo.service.PostService postService;
+	private final com.hana8.demo.service.PostsService postService;
 
 	private boolean isList(HttpServletRequest req) {
 		return req.getRequestURI().contains("/list");

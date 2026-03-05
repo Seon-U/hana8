@@ -8,10 +8,10 @@ import com.hana8.demo.dto.Posts;
 import com.hana8.demo.repository.PostsRepository;
 
 @Service
-public class PostServiceImpl implements PostService {
+public class PostsServiceImpl implements PostsService {
 	public final PostsRepository repository;
 
-	public PostServiceImpl(PostsRepository repository) {
+	public PostsServiceImpl(PostsRepository repository) {
 		this.repository = repository;
 	}
 
