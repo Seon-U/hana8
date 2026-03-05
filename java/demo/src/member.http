@@ -44,3 +44,24 @@ Content-Type: application/json
 
 ### withdraw member
 DELETE {{baseUrl}}/4
+
+### search isActive
+GET {{baseUrl}}/search?isActive=true
+
+### search isActive 0
+GET {{baseUrl}}/search?isActive=0
+
+### search isActive bloodType
+GET {{baseUrl}}/search?isActive=1&bloodType=B
+
+### search member nickname
+GET {{baseUrl}}/search?nickname=hong
+
+### search date
+GET {{baseUrl}}/search?datetime=2026-03-05 15:16:25
+
+### search date
+GET {{baseUrl}}/search?datetime=2026-03-05
+
+### search date
+GET {{baseUrl}}/search?datetime=2026-03-05 09:16

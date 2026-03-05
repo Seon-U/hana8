@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.hana8.demo.dto.PostListDTO;
 import com.hana8.demo.entity.Post;
 import com.hana8.demo.mapper.PostMapper;
 import com.hana8.demo.post.PostDTO;
@@ -20,14 +21,16 @@ public class PostService {
 	private final PostRepository repository;
 	private final PostMapper mapper;
 
-	public List<PostDTO> getPostList(int page, int pageSize) {
-		int pageNum = page - 1;
-		if (pageNum < 0) {
+	public List<PostDTO> getPostList(PostListDTO dto) {
+		int page = dto.getPage() - 1;
+		if (page < 0) {
 			throw new IllegalArgumentException("page must be greater than 0");
 		}
-		Pageable pageable = PageRequest.of(page - 1,
-			pageSize, Sort.by("createdAt").descending());
-		return repository.findAll(pageable).stream().map(mapper::toDTO).toList();
+		Pageable pageable = PageRequest.of(page,
+			dto.getPageSize(), Sort.by("id").descending());
+
+		List<Post> posts = repository.findAll(pageable).getContent();
+		return posts.stream().map(mapper::toDTO).toList();
 	}
 
 	public PostDTO createPost(PostDTO post) {
@@ -42,15 +45,14 @@ public class PostService {
 		oldPost.setBody(post.getBody());
 		oldPost.setWriter(post.getWriter());
 
-		return mapper.toDTO(oldPost);
+		return mapper.toDTO(repository.save(oldPost));
 	}
 
-	public int deletePost(Long id) {
+	public int removePost(Long id) {
 		repository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Post #%d is not found!".formatted(id)));
 
-		repository.deleteById(id);
-		return 1;
+		return repository.deletePost(id);
 	}
 
 	public PostDTO getPost(Long id) {

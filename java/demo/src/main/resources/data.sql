@@ -20,5 +20,5 @@ values ('kim', 'kim@gmail.com', '01012345679', 'B');
 
 insert into Member ( nickname, email, passwd, isActive, bloodType)
 values ('hong', 'hong@gmail.com', null,1,'A'),
-('kim', 'kim@gmail.com', null,1,'B'),
+('kim', 'kim@gmail.com', null,0,'B'),
 ('lee', 'lee@gmail.com', null,1,'AB');

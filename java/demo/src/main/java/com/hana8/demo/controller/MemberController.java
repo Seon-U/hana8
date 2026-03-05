@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hana8.demo.dto.MemberDTO;
+import com.hana8.demo.dto.MemberSearchDTO;
 import com.hana8.demo.service.MemberService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,6 +35,11 @@ public class MemberController {
 		return service.getMember(id);
 	}
 
+	@GetMapping("/search")
+	List<MemberDTO> searchMember(@Valid MemberSearchDTO dto) {
+		return service.searchMember(dto);
+	}
+
 	@PostMapping("")
 	MemberDTO registMember(@Validated(MemberDTO.OnCreate.class) @RequestBody MemberDTO member) {
 		return service.registMember(member);
@@ -48,4 +55,6 @@ public class MemberController {
 	int withdraw(@PathVariable Long id) {
 		return service.withdrawMember(id);
 	}
+
+
 }

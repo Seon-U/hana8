@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hana8.demo.dto.PostListDTO;
 import com.hana8.demo.post.PostDTO;
 import com.hana8.demo.service.PostService;
 
@@ -31,9 +31,9 @@ public class PostController {
 
 	@GetMapping("")
 	public List<PostDTO> getPostList(
-		@RequestParam int page, @RequestParam int pageSize
+		PostListDTO dto
 	) {
-		return service.getPostList(page, pageSize);
+		return service.getPostList(dto);
 	}
 
 	@PostMapping
@@ -48,6 +48,6 @@ public class PostController {
 
 	@DeleteMapping("/{id}")
 	public int removePost(@PathVariable Long id) {
-		return service.deletePost(id);
+		return service.removePost(id);
 	}
 }

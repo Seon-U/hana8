@@ -3,6 +3,9 @@
 ### post list
 GET {{baseUrl}}?page=1&pageSize=5
 
+### postList
+GET {{baseUrl}}?page=1
+
 ### post-regist
 POST {{baseUrl}}
 Content-Type: application/json
