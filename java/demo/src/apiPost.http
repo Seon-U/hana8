@@ -26,6 +26,18 @@ Content-Type: application/json
   "body": "body - kim"
 }
 
+### post-regist2
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "title": "title - kim",
+  "body": {
+    "body": "body 1"
+  },
+  "writer": "1"
+}
+
 ### post-info
 GET {{baseUrl}}/101
 
@@ -58,3 +70,18 @@ GET {{baseUrl}}?page=1&title=Title8&writer=writer80
 
 ### post search
 GET {{baseUrl}}?page=1&title=Title8&writedate=2026-03-05
+
+
+### post - update
+PUT {{baseUrl}}/101
+Content-Type: application/json
+
+{
+  "id": 107,
+  "title": "title 1x",
+  "body": {
+    "id": 104,
+    "body": "body 1xxx"
+  },
+  "writer": "Hongxxx"
+}
