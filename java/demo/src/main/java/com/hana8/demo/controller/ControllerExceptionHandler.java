@@ -37,7 +37,8 @@ public class ControllerExceptionHandler {
 	}
 
 	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<Map<String, String>> handleConstraintViolationExceptionHandler(ConstraintViolationException e) {
+	public ResponseEntity<Map<String, String>> handleConstraintViolationExceptionHandler(
+		ConstraintViolationException e) {
 		Map<String, String> map = e.getConstraintViolations().stream()
 			.collect(
 				Collectors.toMap(

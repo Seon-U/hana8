@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 public class HelloCallService implements GreetingService {
 	private HelloService service;
 
-	public HelloCallService() {}
+	public HelloCallService() {
+	}
 
 	public String call() {
 		return "Hello call service!";
@@ -17,12 +18,12 @@ public class HelloCallService implements GreetingService {
 	// 	this.service = service;
 	// }
 
+	public String sayHello() {
+		return service.sayHello();
+	}
+
 	@Autowired
 	public void setService(HelloService service) {
 		this.service = service;
-	}
-
-	public String sayHello() {
-		return service.sayHello();
 	}
 }

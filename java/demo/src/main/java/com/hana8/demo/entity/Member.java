@@ -23,10 +23,11 @@ import lombok.ToString;
 
 @Data
 @Entity
-@Table(name = "Member", uniqueConstraints = @UniqueConstraint(
+@Table(name = "Member",
+	uniqueConstraints = @UniqueConstraint(
 	name = "uniq_Member_email",
-	columnNames = "email"
-))
+	columnNames = "email")
+)
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

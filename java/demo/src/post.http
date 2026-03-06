@@ -1,4 +1,5 @@
 @baseUrl=http://localhost:8080
+@apibaseUrl=http://localhost:8080/api/posts
 
 ### post list
 GET {{baseUrl}}/posts
@@ -42,3 +43,15 @@ Content-Type: application/json
 
 ### post-delete
 DELETE {{baseUrl}}/posts/1
+
+### post search
+GET {{apibaseUrl}}?page=1&title=Title8
+
+### post search
+GET {{apibaseUrl}}?page=1&title=Title8&body=body of 8
+
+### post search
+GET {{apibaseUrl}}?page=1&title=Title8&writer=writer80
+
+### post search
+GET {{apibaseUrl}}?page=1&title=Title8&writedate=2026-03-05

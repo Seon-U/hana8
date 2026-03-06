@@ -37,8 +37,9 @@ public class CardNoValidator implements
 
 			if (alternate) {
 				digit *= 2;
-				if (digit > 9)
+				if (digit > 9) {
 					digit -= 9;
+				}
 			}
 
 			sum += digit;

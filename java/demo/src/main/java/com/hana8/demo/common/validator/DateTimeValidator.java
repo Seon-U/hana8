@@ -6,14 +6,19 @@ import java.time.format.DateTimeParseException;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class DateTimeValidator implements
 	ConstraintValidator<DateTime, String> {
 	private DateTimeFormatter formatter;
+	private boolean isLocalDate = false;
 
 	@Override
 	public void initialize(DateTime annotation) {
-		this.formatter = DateTimeFormatter.ofPattern(annotation.value());
+		String fmt = annotation.value();
+		this.isLocalDate = fmt.length() <= 10;
+		this.formatter = DateTimeFormatter.ofPattern(fmt);
 	}
 
 	@Override
@@ -23,9 +28,15 @@ public class DateTimeValidator implements
 		}
 
 		try {
-			LocalDateTime.parse(value, formatter);
+			if (this.isLocalDate) {
+				LocalDateTime.parse(value, formatter);
+			} else {
+				LocalDateTime.parse(value, formatter);
+			}
 			return true;
 		} catch (DateTimeParseException e) {
+			e.printStackTrace(System.out);
+			log.info("DateTime parseError = {}", e.getMessage());
 			return false;
 		}
 	}

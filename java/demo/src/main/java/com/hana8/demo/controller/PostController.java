@@ -36,6 +36,7 @@ public class PostController {
 		return service.getPostList(dto);
 	}
 
+
 	@PostMapping
 	public PostDTO createPost(@Validated(PostDTO.OnCreate.class) @RequestBody PostDTO post) {
 		return service.createPost(post);

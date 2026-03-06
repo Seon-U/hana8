@@ -43,3 +43,6 @@ Content-Type: application/json
 
 ### post-remove
 DELETE {{baseUrl}}/101
+
+### search title
+GET {{baseUrl}}/search?title="TEST1"

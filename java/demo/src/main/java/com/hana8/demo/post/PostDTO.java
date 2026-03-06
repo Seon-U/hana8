@@ -1,5 +1,7 @@
 package com.hana8.demo.post;
 
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -26,6 +28,9 @@ public class PostDTO {
 	private String writer;
 
 	private String body;
+
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 
 	public interface OnCreate {
 	}
