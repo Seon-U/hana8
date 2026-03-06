@@ -23,35 +23,6 @@ public class PostsRepositoryListImpl implements PostsRepository {
 	}
 
 	@Override
-	public Posts createPost(PostDTO post) {
-		Long id = posts.stream().mapToLong(Posts::getId).max().orElse(0) + 1;
-		Posts newPost = Posts.builder().id(id).title(post.getTitle())
-			.body(post.getBody()).writer(post.getWriter()).build();
-		posts.add(newPost);
-		return newPost;
-	}
-
-	@Override
-	public Posts updatePost(PostDTO post) {
-		Posts oldPost = find(post.getId());
-		if (oldPost == null) {
-			return null;
-		}
-
-		oldPost.setTitle(post.getTitle());
-		oldPost.setBody(post.getBody());
-		oldPost.setWriter(post.getWriter());
-
-		return oldPost;
-
-		// return posts.stream().filter(p -> p.getId() == post.getId()).findFirst().map(oldPost -> {
-		// 	oldPost.setTitle(post.getTitle());
-		// 	oldPost.setBody(post.getBody());
-		// 	return oldPost;
-		// }).orElse(null);
-	}
-
-	@Override
 	public int deletePost(Long id) {
 		Posts oldPost = find(id);
 		if (oldPost == null) {
@@ -71,5 +42,37 @@ public class PostsRepositoryListImpl implements PostsRepository {
 	@Override
 	public void destroy() {
 		System.out.println("destroyed PostRepositoryListImpl");
+	}
+
+	@Override
+	public Posts updatePost(PostsDTO post) {
+		Posts oldPost = find(post.getId());
+		if (oldPost == null) {
+			return null;
+		}
+
+		oldPost.setTitle(post.getTitle());
+		oldPost.setBody(post.getBody());
+		oldPost.setWriter(post.getWriter());
+
+		return oldPost;
+
+		// return posts.stream().filter(p -> p.getId() == post.getId()).findFirst().map(oldPost -> {
+		// 	oldPost.setTitle(post.getTitle());
+		// 	oldPost.setBody(post.getBody());
+		// 	return oldPost;
+		// }).orElse(null);
+	}
+
+	@Override
+	public Posts createPost(PostsDTO post) {
+		Long id = posts.stream().mapToLong(Posts::getId).max().orElse(0) + 1;
+
+		Posts newPost = Posts.builder().id(id).title(post.getTitle())
+			.body(post.getBody())
+			.writer(post.getWriter())
+			.build();
+		posts.add(newPost);
+		return newPost;
 	}
 }

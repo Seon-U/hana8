@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hana8.demo.dto.PostDTO;
 import com.hana8.demo.dto.PostListDTO;
-import com.hana8.demo.post.PostDTO;
+import com.hana8.demo.dto.PostSaveDTO;
 import com.hana8.demo.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class PostController {
 
 
 	@PostMapping
-	public PostDTO createPost(@Validated(PostDTO.OnCreate.class) @RequestBody PostDTO post) {
+	public PostDTO createPost(@Validated(PostDTO.OnCreate.class) @RequestBody PostSaveDTO post) {
 		return service.createPost(post);
 	}
 

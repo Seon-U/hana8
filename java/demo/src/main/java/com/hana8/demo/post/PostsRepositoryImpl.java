@@ -18,7 +18,7 @@ public class PostsRepositoryImpl implements PostsRepository {
 	}
 
 	@Override
-	public Posts createPost(PostDTO post) {
+	public Posts createPost(PostsDTO post) {
 		Long id = posts.keySet().stream().max(Long::compareTo).orElse(0L) + 1;
 		// Post newer = new Post();
 		// newer.setId(id);
@@ -28,16 +28,6 @@ public class PostsRepositoryImpl implements PostsRepository {
 
 		posts.put(id, newer);
 		return newer;
-	}
-
-	@Override
-	public Posts updatePost(PostDTO post) {
-		Posts oldPost = posts.get(post.getId());
-		oldPost.setTitle(post.getTitle());
-		oldPost.setBody(post.getBody());
-		oldPost.setWriter(post.getWriter());
-
-		return oldPost;
 	}
 
 	@Override
@@ -56,5 +46,15 @@ public class PostsRepositoryImpl implements PostsRepository {
 
 	public void destroy() {
 		System.out.println("----------PostRepositoryImpl destroyed");
+	}
+
+	@Override
+	public Posts updatePost(PostsDTO post) {
+		Posts oldPost = posts.get(post.getId());
+		oldPost.setTitle(post.getTitle());
+		oldPost.setBody(post.getBody());
+		oldPost.setWriter(post.getWriter());
+
+		return oldPost;
 	}
 }

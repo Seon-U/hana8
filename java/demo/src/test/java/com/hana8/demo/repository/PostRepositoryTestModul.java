@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import com.hana8.demo.entity.Post;
+import com.hana8.demo.entity.PostBody;
 
 /**
  * [설계 원칙]
@@ -33,11 +34,14 @@ class PostRepositoryTestModul extends BaseRepositoryTest {
 	// 여러 테스트에서 반복되는 "데이터 준비" 로직을 한 곳에서 관리
 	// -------------------------------------------------------
 	private Post createAndSavePost(String title, String writer, String body) {
+		PostBody newbody = new PostBody(body);
+
 		Post post = Post.builder()
 			.title(title)
 			.writer(writer)
-			.body(body)
+			.body(newbody)
 			.build();
+
 		return repository.save(post);
 	}
 
@@ -107,14 +111,18 @@ class PostRepositoryTestModul extends BaseRepositoryTest {
 	@Test
 	void createAllTest() {
 		long countBefore = repository.count();
-
 		List<Post> posts = LongStream.rangeClosed(1, 50)
-			.mapToObj(l -> Post.builder()
-				.title("Bulk Title " + l)
-				.body("Bulk body " + l)
-				.writer("writer" + l)
-				.build()
-			).toList();
+			.mapToObj(l -> {
+				PostBody newbody = new PostBody("bulk body" + l);
+				Post post = Post.builder()
+						.title("Bulk Title " + l)
+						.body(newbody)
+						.writer("writer" + l)
+						.build();
+
+				newbody.setPost(post);
+				return post;
+				}).toList();
 
 		repository.saveAll(posts);
 

@@ -44,5 +44,17 @@ Content-Type: application/json
 ### post-remove
 DELETE {{baseUrl}}/101
 
-### search title
-GET {{baseUrl}}/search?title="TEST1"
+## search title
+#GET {{baseUrl}}/search?title="TEST1"
+
+### post search
+GET {{baseUrl}}?page=1&title=Title8
+
+### post search
+GET {{baseUrl}}?page=1&title=Title8&body=body of 8
+
+### post search
+GET {{baseUrl}}?page=1&title=Title8&writer=writer80
+
+### post search
+GET {{baseUrl}}?page=1&title=Title8&writedate=2026-03-05

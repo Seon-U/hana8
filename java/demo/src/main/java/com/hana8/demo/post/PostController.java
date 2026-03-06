@@ -33,7 +33,7 @@ public class PostController {
 	}
 
 	@PostMapping("")
-	public Posts addPost(HttpServletRequest req, @Valid @RequestBody PostDTO post) {
+	public Posts addPost(HttpServletRequest req, @Valid @RequestBody PostsDTO post) {
 		return service.addPost(post, isList(req));
 	}
 
@@ -44,7 +44,7 @@ public class PostController {
 
 	@PutMapping("/{id}")
 	public Posts editPost(HttpServletRequest req, @PathVariable Long id,
-		@Validated(PostDTO.OnUpdate.class) @RequestBody PostDTO post) {
+		@Validated(PostsDTO.OnUpdate.class) @RequestBody PostsDTO post) {
 		if (id == 0L) {
 			throw new IllegalArgumentException("게시글 id는 0보다 커야 합니다!");
 		}

@@ -10,11 +10,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.hana8.demo.dto.PostDTO;
 import com.hana8.demo.dto.PostListDTO;
+import com.hana8.demo.dto.PostRequestDTO;
+import com.hana8.demo.dto.PostSaveDTO;
 import com.hana8.demo.entity.Post;
+import com.hana8.demo.entity.PostBody;
 import com.hana8.demo.entity.QPost;
+import com.hana8.demo.mapper.PostBodyMapper;
 import com.hana8.demo.mapper.PostMapper;
-import com.hana8.demo.post.PostDTO;
+import com.hana8.demo.repository.PostBodyRepository;
 import com.hana8.demo.repository.PostRepository;
 import com.querydsl.core.BooleanBuilder;
 
@@ -25,6 +30,9 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 	private final PostRepository repository;
 	private final PostMapper mapper;
+	private final PostBodyRepository bodyRepository;
+	private final PostBodyMapper bodyMapper;
+
 
 	public List<PostDTO> getPostList(PostListDTO dto) {
 		System.out.println("dto = " + dto);
@@ -32,6 +40,7 @@ public class PostService {
 		if (page < 0) {
 			throw new IllegalArgumentException("page must be greater than 0");
 		}
+
 		Pageable pageable = PageRequest.of(page,
 			dto.getPageSize(), Sort.by("id").descending());
 
@@ -43,7 +52,7 @@ public class PostService {
 		}
 
 		if (StringUtils.hasText(dto.getBody())) {
-			bb.and(post.body.contains(dto.getBody()));
+			bb.and(post.body.body.contains(dto.getBody()));
 		}
 
 		if (StringUtils.hasText(dto.getWriter())) {
@@ -66,8 +75,17 @@ public class PostService {
 		return posts.stream().map(mapper::toDTO).toList();
 	}
 
-	public PostDTO createPost(PostDTO post) {
-		return mapper.toDTO(repository.save(mapper.toEntity(post)));
+	public PostDTO createPost(PostSaveDTO post) {
+		Post savedPost = repository.save(mapper.toEntity((PostRequestDTO)post));
+		PostBody body = PostBody.builder().post(savedPost).body(post.getBody()).build();
+		PostBody savedBody = bodyRepository.save(body);
+		// PostDTO dto = mapper.toDTO(savedPost);
+		// dto.setBody(PostBodyDTO.builder().id(body.getId()).body(body.getBody()).build());
+		// return dto;
+
+		savedPost.setBody(savedBody);
+		return mapper.toDTO(savedPost);
+		// return mapper.toDTO(repository.save(mapper.toEntity(post)));
 	}
 
 	public PostDTO editPost(Long id, PostDTO post) {
@@ -75,7 +93,7 @@ public class PostService {
 			.orElseThrow(() -> new IllegalArgumentException("Post #%d is not found!".formatted(id)));
 
 		oldPost.setTitle(post.getTitle());
-		oldPost.setBody(post.getBody());
+		oldPost.setBody(bodyMapper.toEntity(post.getBody()));
 		oldPost.setWriter(post.getWriter());
 
 		return mapper.toDTO(repository.save(oldPost));

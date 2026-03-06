@@ -1,7 +1,7 @@
 alter table User
     add column bloodType enum ('A','AB','B','O');
 
-create table testdb.Member
+create table Member
 (
     id        int unsigned auto_increment
         primary key,
@@ -16,18 +16,46 @@ create table testdb.Member
         unique (email)
 );
 
-create table Post (
-  id int unsigned not null auto_increment,
-  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP not null,
-  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
-  title varchar(255) not null,
-  writer varchar(31) not null,
-  body varchar(2000),
-  primary key (id)
+create table Post
+(
+    id        int unsigned auto_increment                                     not null,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP                             not null,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+    title     varchar(255)                                                    not null,
+    writer    varchar(31)                                                     not null,
+    primary key (id)
 );
 
+create table PostBody
+(
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP                             not null,
+    id        int unsigned auto_increment                                     not null,
+    post      int unsigned                                                    not null,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+    body      text                                                            not null,
+    primary key (id)
+);
 
-insert into Post (title, writer, body)
-values ('Title1', 'hong', 'body of Title1'),
-       ('Title2', 'kim', 'body of Title2'),
-       ('Title3', 'lee', 'body of Title3');
+alter table PostBody
+    add constraint UKbstcjljn3wcpf2xlv2xeplw9k unique (post);
+
+alter table PostBody
+    add constraint fk_PostBody_post
+        foreign key (post) references Post (id) on delete cascade;
+
+create table Reply
+(
+    id        int unsigned auto_increment                                     not null,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP                             not null,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP not null,
+    reply     varchar(255)                                                    not null,
+    replier   varchar(31)                                                     not null,
+    post      int unsigned                                                    not null,
+    primary key (id)
+);
+
+alter table Reply
+    add constraint fk_Reply_post
+        foreign key (post)
+            references Post (id)
+            on delete cascade;

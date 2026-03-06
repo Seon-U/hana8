@@ -32,7 +32,12 @@ public class PostsServiceImpl implements PostsService {
 	}
 
 	@Override
-	public Posts addPost(PostDTO post, boolean isList) {
+	public int removePost(Long id, boolean isList) {
+		return isList ? repositoryList.deletePost(id) : repository.deletePost(id);
+	}
+
+	@Override
+	public Posts addPost(PostsDTO post, boolean isList) {
 		if (post.getWriter() == null) {
 			post.setWriter(defaultWriter);
 		}
@@ -40,12 +45,7 @@ public class PostsServiceImpl implements PostsService {
 	}
 
 	@Override
-	public Posts editPost(PostDTO post, boolean isList) {
+	public Posts editPost(PostsDTO post, boolean isList) {
 		return isList ? repositoryList.updatePost(post) : repository.updatePost(post);
-	}
-
-	@Override
-	public int removePost(Long id, boolean isList) {
-		return isList ? repositoryList.deletePost(id) : repository.deletePost(id);
 	}
 }
