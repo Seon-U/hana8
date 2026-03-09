@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.hana8.demo.dto.PostDTO;
 import com.hana8.demo.dto.PostListDTO;
+import com.hana8.demo.dto.ReplyDTO;
 import com.hana8.demo.entity.Post;
 import com.hana8.demo.entity.PostBody;
 import com.hana8.demo.entity.QPost;
 import com.hana8.demo.entity.Reply;
 import com.hana8.demo.mapper.PostBodyMapper;
 import com.hana8.demo.mapper.PostMapper;
+import com.hana8.demo.mapper.ReplyMapper;
 import com.hana8.demo.repository.PostRepository;
 import com.hana8.demo.repository.ReplyRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -31,7 +33,7 @@ public class PostService {
 	private final PostMapper mapper;
 	private final PostBodyMapper bodyMapper;
 	private final ReplyRepository replyRepository;
-
+	private final ReplyMapper replyMapper;
 
 	public List<PostDTO> getPostList(PostListDTO dto) {
 		System.out.println("dto = " + dto);
@@ -105,11 +107,36 @@ public class PostService {
 		return mapper.toDTO(post);
 	}
 
-	public PostDTO getReplies(Long id) {
-		Post post = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Post Not Found"));
+	public ReplyDTO getReply(Long id) {
+		return replyMapper.toDTO(replyRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException(
+				"Reply #%d is not found!".formatted(id))));
+	}
 
-		List<Reply> replies = replyRepository.findAllByPost(post);
-		post.setReplies(replies);
-		return mapper.toDTO(post);
+	public List<ReplyDTO> getReplies(Long postId) {
+		List<Reply> replies = replyRepository.findAllByPostId(postId);
+		return replyMapper.toDTOList(replies);
+		// replyRepository.findAllByPostId(postId).stream()
+		// 	.map(replyMapper::toDTO).toList();
+	}
+
+	public ReplyDTO addReply(ReplyDTO dto) {
+		Post post = repository.findById(dto.getPostId()).orElseThrow();
+		Reply reply = replyMapper.toEntity(dto);
+		reply.setPost(post);
+		return replyMapper.toDTO(replyRepository.save(reply));
+	}
+
+	public ReplyDTO editReply(ReplyDTO dto) {
+		Reply reply = replyRepository.findById(dto.getId())
+			.orElseThrow(() -> new IllegalArgumentException("Reply #%d is not found!".formatted(dto.getId())));
+
+		reply.setReply(dto.getReply());
+		return replyMapper.toDTO(replyRepository.save(reply));
+	}
+
+	public int removeReply(Long id) {
+		replyRepository.findById(id).orElseThrow();
+		return replyRepository.deleteByReplyId(id);
 	}
 }

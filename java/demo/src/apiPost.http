@@ -85,3 +85,31 @@ Content-Type: application/json
   },
   "writer": "Hongxxx"
 }
+
+### get replies
+GET {{baseUrl}}/92/replies
+
+### add reply
+POST {{baseUrl}}/92/replies
+Content-Type: application/json
+
+{
+  "reply": "reply 1111",
+  "replier": "hong"
+}
+
+### get reply
+GET {{baseUrl}}/92/replies/1
+
+### edit reply
+PUT {{baseUrl}}/92/replies/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "reply": "reply xxxxxxx"
+}
+
+
+### delete reply
+DELETE {{baseUrl}}/102/replies/1

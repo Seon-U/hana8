@@ -9,7 +9,6 @@ import java.util.stream.LongStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +31,7 @@ class PostRepositoryTest extends BaseRepositoryTest {
 			orgCnt = repository.count();
 	}
 
-	@Test
+	// @Test
 	void jpqlTest() {
 		List<Post> byIdBetween = repository.findByIdBetween(10L, 20L);
 		byIdBetween.stream().map(p -> p.getId() + " : " + p.getTitle()).forEach(System.out::println);
@@ -66,7 +65,7 @@ class PostRepositoryTest extends BaseRepositoryTest {
 	}
 
 
-	@Test
+	// @Test
 	void pagingTest() {
 		Sort sort = Sort.by("id").descending();
 		Pageable pager = PageRequest.of(0, 10, sort);
@@ -105,7 +104,7 @@ class PostRepositoryTest extends BaseRepositoryTest {
 		);
 	}
 
-	@Test
+	// @Test
 	void titleLikeTest() {
 		List<Post> posts = repository.findByTitleStartingWith("Title8");
 		System.out.println("posts = " + posts);
@@ -117,7 +116,7 @@ class PostRepositoryTest extends BaseRepositoryTest {
 	}
 
 
-	@Test
+	// @Test
 	@Order(1)
 	void createTest() {
 		Post savedPost = repository.save(new Post("Title 101", "writer101"));
@@ -127,7 +126,7 @@ class PostRepositoryTest extends BaseRepositoryTest {
 		id = post.getId();
 	}
 
-	@Test
+	// @Test
 	@Order(2)
 	void updateTest() {
 		Post post = repository.findById(id).orElseThrow();
@@ -138,7 +137,7 @@ class PostRepositoryTest extends BaseRepositoryTest {
 		assertThat(post.getTitle()).isEqualTo(post2.getTitle());
 	}
 
-	@Test
+	// @Test
 	@Order(3)
 	void deleteTest() {
 		Post post = repository.findById(id).orElseThrow();

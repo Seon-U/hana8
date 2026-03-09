@@ -1,5 +1,6 @@
 package com.hana8.demo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -45,7 +46,7 @@ public class Post extends BaseEntity {
 	private String writer;
 
 	@OneToMany(mappedBy = "post")
-	private List<Reply> replies;
+	private List<Reply> replies = new ArrayList<>();
 
 	public Post(String title, String writer) {
 		this.title = title;

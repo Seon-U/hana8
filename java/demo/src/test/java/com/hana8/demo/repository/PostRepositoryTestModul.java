@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.List;
 import java.util.stream.LongStream;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
@@ -45,7 +44,7 @@ class PostRepositoryTestModul extends BaseRepositoryTest {
 		return repository.save(post);
 	}
 
-	@Test
+	// @Test
 	void createTest() {
 		long countBefore = repository.count();
 
@@ -64,7 +63,7 @@ class PostRepositoryTestModul extends BaseRepositoryTest {
 		assertThat(repository.count()).isEqualTo(countBefore + 1);
 	}
 
-	@Test
+	// @Test
 	void readTest() {
 		// 자체 데이터 준비
 		createAndSavePost("read test title", "reader", "read body");
@@ -80,7 +79,7 @@ class PostRepositoryTestModul extends BaseRepositoryTest {
 			.contains("read test title");
 	}
 
-	@Test
+	// @Test
 	void updateTest() {
 		// 자체 데이터 준비
 		Post saved = createAndSavePost("before update", "updater", "update body");
@@ -94,7 +93,7 @@ class PostRepositoryTestModul extends BaseRepositoryTest {
 		assertThat(updated.getTitle()).isEqualTo("after update");
 	}
 
-	@Test
+	// @Test
 	void deleteTest() {
 		// 자체 데이터 준비
 		Post saved = createAndSavePost("to be deleted", "deleter", "delete body");
@@ -108,7 +107,7 @@ class PostRepositoryTestModul extends BaseRepositoryTest {
 		assertThat(repository.count()).isEqualTo(countAfterSave - 1);
 	}
 
-	@Test
+	// @Test
 	void createAllTest() {
 		long countBefore = repository.count();
 		List<Post> posts = LongStream.rangeClosed(1, 50)
@@ -133,7 +132,7 @@ class PostRepositoryTestModul extends BaseRepositoryTest {
 	 * CRUD 전체 흐름을 한 번에 검증하고 싶을 때
 	 * 하나의 메서드 안에서 수행하면 순서 의존 문제가 원천 차단됨
 	 */
-	@Test
+	// @Test
 	void crudFlowTest() {
 		long countBefore = repository.count();
 

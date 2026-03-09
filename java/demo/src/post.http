@@ -41,4 +41,4 @@ Content-Type: application/json
 
 
 ### post-delete
-DELETE {{baseUrl}}/posts/1
+DELETE {{baseUrl}}/posts/102
