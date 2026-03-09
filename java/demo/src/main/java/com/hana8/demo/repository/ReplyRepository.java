@@ -21,4 +21,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long>, QuerydslPre
 	@Transactional
 	@Modifying
 	int deleteByReplyId(Long id);
+
+	Long countByReplierId(Long id);
 }

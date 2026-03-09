@@ -13,7 +13,9 @@ public class ReplyDTO {
 	private Long id;
 
 	private String reply;
-	private String replier;
+	// private Long replierId;
+
+	private MemberDTO replier;
 
 	private Long postId;
 

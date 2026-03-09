@@ -42,6 +42,12 @@ public class Reply extends BaseEntity {
 	@Column(nullable = false)
 	private String reply;
 
-	@Column(nullable = false, length = 31)
-	private String replier;
+	@ManyToOne
+	@JoinColumn(name = "replier", referencedColumnName = "id",
+		columnDefinition = "int unsigned not null",
+		foreignKey = @ForeignKey(name = "fk_Reply_replier_Member")
+	)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ToString.Exclude
+	private Member replier;
 }

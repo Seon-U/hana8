@@ -83,22 +83,26 @@ Content-Type: application/json
     "id": 104,
     "body": "body 1xxx"
   },
-  "writer": "Hongxxx"
+  "writer": {
+    "id": 1
+  }
 }
 
 ### get post
-GET {{baseUrl}}/92
+GET {{baseUrl}}/1
 
 ### get replies
-GET {{baseUrl}}/92/replies
+GET {{baseUrl}}/1/replies
 
 ### add reply
-POST {{baseUrl}}/92/replies
+POST {{baseUrl}}/1/replies
 Content-Type: application/json
 
 {
   "reply": "reply 1111",
-  "replier": "hong"
+  "replier": {
+    "id": 1
+  }
 }
 
 ### get reply
@@ -115,4 +119,4 @@ Content-Type: application/json
 
 
 ### delete reply
-DELETE {{baseUrl}}/102/replies/1
+DELETE {{baseUrl}}/1/replies/1

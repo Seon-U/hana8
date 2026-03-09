@@ -60,4 +60,7 @@ public class Member extends BaseEntity {
 
 	@OneToMany(mappedBy = "writer")
 	private List<Post> posts;
+
+	@OneToMany(mappedBy = "replier")
+	private List<Reply> replies;
 }

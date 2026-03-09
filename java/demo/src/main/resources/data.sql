@@ -38,6 +38,6 @@ insert into PostBody(body, post)
 values ('body of Title3', last_insert_id());
 
 insert into Reply(reply, replier, post)
-values ('rrrr1-1', 'hong', 1);
+values ('rrrr1-1', 1, 1);
 insert into Reply(reply, replier, post)
-values ('rrrr1-2', 'hong', 1);
+values ('rrrr1-2', 2, 1);
