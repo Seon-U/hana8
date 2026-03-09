@@ -39,7 +39,7 @@ public class PostDTO {
 	@JsonManagedReference
 	private ReplyDTO reply;
 
-	// @JsonBackReference
+	@JsonManagedReference
 	@Builder.Default
 	private List<ReplyDTO> replies = new ArrayList<>();
 

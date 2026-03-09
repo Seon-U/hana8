@@ -86,6 +86,9 @@ Content-Type: application/json
   "writer": "Hongxxx"
 }
 
+### get post
+GET {{baseUrl}}/92
+
 ### get replies
 GET {{baseUrl}}/92/replies
 

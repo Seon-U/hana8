@@ -104,7 +104,10 @@ public class PostService {
 	public PostDTO getPost(Long id) {
 		Post post = repository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Post #%d is not found!".formatted(id)));
-		return mapper.toDTO(post);
+
+		PostDTO dto = mapper.toDTO(post);
+		dto.setReplies(replyMapper.toDTOList(replyRepository.findAllByPostId(id)));
+		return dto;
 	}
 
 	public ReplyDTO getReply(Long id) {

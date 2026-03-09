@@ -46,6 +46,7 @@ public class Post extends BaseEntity {
 	private String writer;
 
 	@OneToMany(mappedBy = "post")
+	@Builder.Default
 	private List<Reply> replies = new ArrayList<>();
 
 	public Post(String title, String writer) {
