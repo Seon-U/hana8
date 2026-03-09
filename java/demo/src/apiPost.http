@@ -12,8 +12,17 @@ Content-Type: application/json
 
 {
   "title": "plz delete",
-  "writer": "pppppppppppppppppppppppp",
-  "body": "body 1"
+  "writer": {
+    "id": 1
+  },
+  "body": {
+    "body": "kkkkkkkkkkkkkk"
+  },
+  "hashtags": [
+    {
+      "tag": "mon"
+    }
+  ]
 }
 
 ### post-regist
@@ -35,7 +44,14 @@ Content-Type: application/json
   "body": {
     "body": "body 1"
   },
-  "writer": "1"
+  "writer": {
+    "id": 1
+  },
+  "hashtags": [
+    {
+      "tag": "monday"
+    }
+  ]
 }
 
 ### post-info
@@ -73,11 +89,11 @@ GET {{baseUrl}}?page=1&title=Title8&writedate=2026-03-05
 
 
 ### post - update
-PUT {{baseUrl}}/101
+PUT {{baseUrl}}/1
 Content-Type: application/json
 
 {
-  "id": 107,
+  "id": 1,
   "title": "title 1x",
   "body": {
     "id": 104,
@@ -120,3 +136,6 @@ Content-Type: application/json
 
 ### delete reply
 DELETE {{baseUrl}}/1/replies/1
+
+### post-info
+GET {{baseUrl}}/3

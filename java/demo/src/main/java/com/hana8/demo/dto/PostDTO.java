@@ -37,11 +37,12 @@ public class PostDTO {
 	private PostBodyDTO body;
 
 	@JsonManagedReference
-	private ReplyDTO reply;
+	@Builder.Default
+	private List<ReplyDTO> replies = new ArrayList<>();
 
 	@JsonManagedReference
 	@Builder.Default
-	private List<ReplyDTO> replies = new ArrayList<>();
+	private List<HashtagDTO> hashtags = new ArrayList<>();
 
 	public interface OnCreate {
 	}

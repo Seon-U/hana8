@@ -1,7 +1,5 @@
 package com.hana8.demo.entity;
 
-import java.util.List;
-
 import org.hibernate.annotations.ColumnDefault;
 
 import com.hana8.demo.common.enums.BloodType;
@@ -13,7 +11,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -58,9 +55,9 @@ public class Member extends BaseEntity {
 	@Column(nullable = false)
 	private BloodType bloodType;
 
-	@OneToMany(mappedBy = "writer")
-	private List<Post> posts;
-
-	@OneToMany(mappedBy = "replier")
-	private List<Reply> replies;
+	// @OneToMany(mappedBy = "writer")
+	// private List<Post> posts;
+	//
+	// @OneToMany(mappedBy = "replier")
+	// private List<Reply> replies;
 }

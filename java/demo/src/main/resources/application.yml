@@ -43,3 +43,13 @@ spring:
   web:
     resources:
       add-mappings: false
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

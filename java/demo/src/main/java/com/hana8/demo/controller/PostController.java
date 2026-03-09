@@ -27,6 +27,7 @@ public class PostController {
 
 	@GetMapping("/{id}")
 	public PostDTO getPost(@PathVariable Long id) {
+		System.out.println("id = " + id);
 		return service.getPost(id);
 	}
 

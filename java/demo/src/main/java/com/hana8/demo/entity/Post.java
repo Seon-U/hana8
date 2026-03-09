@@ -9,11 +9,13 @@ import org.hibernate.annotations.OnDeleteAction;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -37,7 +39,7 @@ public class Post extends BaseEntity {
 	// @UuidGenerator(style = UuidGenerator.Style.RANDOM)
 	// @UuidGenerator
 	// @Tsid
-	@Column(updatable = false, columnDefinition = "int unsigned")
+	@Column(columnDefinition = "int unsigned")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
@@ -48,7 +50,7 @@ public class Post extends BaseEntity {
 	@OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
 	private PostBody body;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "writer", nullable = false,
 				foreignKey = @ForeignKey(name = "fk_Post_writer_Member"))
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -57,6 +59,10 @@ public class Post extends BaseEntity {
 	@OneToMany(mappedBy = "post")
 	@Builder.Default
 	private List<Reply> replies = new ArrayList<>();
+
+	@ManyToMany(mappedBy = "hashtagPosts")
+	@Builder.Default
+	private List<Hashtag> hashtags = new ArrayList<>();
 
 	public Post(String title, Member writer) {
 		this.title = title;

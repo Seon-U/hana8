@@ -11,6 +11,7 @@ import com.hana8.demo.entity.PostBody;
 @Mapper(componentModel = "spring", uses = {MemberMapper.class, ReplyMapper.class})
 public interface PostMapper {
 	@Mapping(target = "replies", ignore = true)
+	@Mapping(target = "hashtags", ignore = true)
 	PostDTO toDTO(Post post);
 
 	@Mapping(target = "body", ignore = true)
@@ -19,4 +20,5 @@ public interface PostMapper {
 
 	@Mapping(target = "post", ignore = true)
 	PostBody toEntity(PostBodyDTO dto);
+
 }

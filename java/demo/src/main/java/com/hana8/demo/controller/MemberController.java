@@ -26,7 +26,7 @@ public class MemberController {
 	private final MemberService service;
 
 	@GetMapping("")
-	List<MemberDTO> getNUmbers() {
+	List<MemberDTO> getmembers() {
 		return service.getMembers();
 	}
 
