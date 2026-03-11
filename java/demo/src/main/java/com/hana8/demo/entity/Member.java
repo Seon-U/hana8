@@ -69,6 +69,10 @@ public class Member extends BaseEntity {
 	@Builder.Default
 	private List<Dept> depts = new ArrayList<>();
 
+	@OneToMany(mappedBy = "member")
+	@Builder.Default
+	private List<MemberImage> images = new ArrayList<>();
+
 	public Member(Long id) {
 		this.id = id;
 	}

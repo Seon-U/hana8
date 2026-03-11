@@ -68,3 +68,46 @@ GET {{baseUrl}}/search?datetime=2026-03-05
 
 ### search date
 GET {{baseUrl}}/search?datetime=2026-03-05 09:16
+
+
+### 파일 업로드 http
+#POST {{baseUrl}}/files/upload
+POST {{baseUrl}}/files/secure/upload
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="test1.jpg"
+Content-Type: image/jpeg
+
+< /Users/gimseon-u/testImg/test1.jpg
+--boundary–
+
+### 다중 파일 업로드
+POST {{baseUrl}}/files/upload/multiple
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="files"; filename="test1.jpg"
+Content-Type: image/jpeg
+
+< /Users/gimseon-u/testImg/test1.jpg
+--boundary
+Content-Disposition: form-data; name="files"; filename="test2.png"
+Content-Type: image/png
+
+< /Users/gimseon-u/testImg/test2.png
+--boundary--
+
+### 파일 다운로드
+GET {{baseUrl}}/files/download/test.jpg
+
+### 파일 다운로드
+GET {{baseUrl}}/files/download/c54b8d37-3d1a-47f3-bd4e-97b3413b94df.jpg
+
+### 파일 다운로드 (secure)
+GET {{baseUrl}}/files/download/5d027ce0-668b-400b-8c24-3b1dd902760a.jpg?isSecure=true
+
+
+#경로는 나중에 편집
+### 파일 삭제
+DELETE {{baseUrl}}/files/delete/e54a267e-e851-452f-96d1-c073283441ee.jpg

@@ -59,3 +59,19 @@ alter table Reply
         foreign key (post)
             references Post (id)
             on delete cascade;
+
+# 여긴 내가 추가함
+create table MemberImage (
+                             id int unsigned not null,
+                             orgname varchar(255),
+                             savedir varchar(255),
+                             savename varchar(255),
+                             member int unsigned,
+                             primary key (id)
+)
+
+alter table MemberImage
+    add constraint fk_MemberImage_member
+        foreign key (member)
+            references Member (id)
+            on delete cascade

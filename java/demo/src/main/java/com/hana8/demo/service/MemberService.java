@@ -14,6 +14,7 @@ import com.hana8.demo.mapper.DeptMapper;
 import com.hana8.demo.mapper.MemberMapper;
 import com.hana8.demo.mapper.PostMapper;
 import com.hana8.demo.repository.DeptRepository;
+import com.hana8.demo.repository.MemberImageRepository;
 import com.hana8.demo.repository.MemberRepository;
 import com.hana8.demo.repository.PostRepository;
 import com.hana8.demo.repository.ReplyRepository;
@@ -28,10 +29,22 @@ public class MemberService {
 	private final PostRepository postRepository;
 	private final ReplyRepository replyRepository;
 	private final DeptRepository deptRepository;
+	private final MemberImageRepository imageRepository;
 
 	private final MemberMapper mapper;
 	private final PostMapper postMapper;
 	private final DeptMapper deptMapper;
+
+	// public MemberDTO addMemberImage(Long id, MemberImageDTO) {
+	// 	Member member = repository.findById(id)
+	// 		.orElseThrow(() -> new IllegalArgumentException("Member #%d is not found!".formatted(id)));
+	// }
+	//
+	// public MemberDTO removeMemberImage(Long id, Long imageId) {}
+	//
+	// public MemberDTO editMemberImage() {
+	//
+	// }
 
 	public List<MemberDTO> getMembers() {
 		List<Member> members = repository.findAll();
