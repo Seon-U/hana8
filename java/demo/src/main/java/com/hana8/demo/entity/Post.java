@@ -48,12 +48,14 @@ public class Post extends BaseEntity {
 
 	// @OneToOne(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@OneToOne(mappedBy = "post", cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private PostBody body;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "writer", nullable = false,
 				foreignKey = @ForeignKey(name = "fk_Post_writer_Member"))
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ToString.Exclude
 	private Member writer;
 
 	@OneToMany(mappedBy = "post")
@@ -62,6 +64,7 @@ public class Post extends BaseEntity {
 
 	@ManyToMany(mappedBy = "hashtagPosts")
 	@Builder.Default
+	@ToString.Exclude
 	private List<Hashtag> hashtags = new ArrayList<>();
 
 	public Post(String title, Member writer) {

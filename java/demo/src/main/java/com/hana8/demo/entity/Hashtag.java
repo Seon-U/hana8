@@ -52,7 +52,8 @@ public class Hashtag extends BaseEntity {
 		joinColumns = @JoinColumn(name = "hashtag",
 			foreignKey = @ForeignKey(name = "fk_HashtagPost_hashtag")),
 		inverseJoinColumns = @JoinColumn(name = "post",
-			foreignKey = @ForeignKey(name = "fk_HashtagPost_post"))
+			foreignKey = @ForeignKey(name = "fk_HashtagPost_post",
+			foreignKeyDefinition = "foreign key(post) references Post(id) in delete cascade"))
 	)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@Builder.Default

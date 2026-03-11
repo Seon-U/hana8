@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '4.0.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
 }
 
 group = 'com.hana8'
@@ -48,9 +49,12 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    implementation 'org.springframework.boot:spring-boot-starter-json'
 
 //    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-webmvc-test'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     //JpaTest
@@ -64,8 +68,36 @@ dependencies {
     implementation 'io.hypersistence:hypersistence-utils-hibernate-70:3.15.2'
 }
 
+jacoco {
+    toolVersion = "0.8.14"
+}
+
+
 tasks.named('test') {
     useJUnitPlatform()
     jvmArgs '-Xshare:off' // JVM 아규먼트 설정
     jvmArgs '-XX:+EnableDynamicAgentLoading'
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+check.dependsOn jacocoTestReport
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS'
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+        }
+    }
 }
