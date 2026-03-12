@@ -46,3 +46,5 @@ db.properties
 tmp
 upload
 secure
+
+security.yml

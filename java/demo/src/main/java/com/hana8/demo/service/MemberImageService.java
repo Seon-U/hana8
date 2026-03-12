@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 
-import com.hana8.demo.entity.MemberImage;
 import com.hana8.demo.repository.MemberImageRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,11 +45,6 @@ public class MemberImageService {
 	}
 
 	public MultipartFile saveMemberImage(MultipartFile file) {
-		String savedName = upload(file);//
-		//SET image
-		memberImageRepository.save(new MemberImage(savedName, file));
-		//TODO: upload file and save it to MemberImage Entity
-
 		return file;
 	}
 

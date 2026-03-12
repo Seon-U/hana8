@@ -2,6 +2,12 @@ spring:
   application:
     name: demo
 
+  messages:
+    basename: messages/message
+
+  config:
+    import: classpath:security.yml
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3310/testdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -63,3 +69,19 @@ springdoc:
   api-docs:
     enabled: true
     path: /hana8/api-docs
+
+management:
+  server:
+    port: 9001
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: env,beans
+  endpoint:
+    metrics:
+      access: read_only
+    shutdown:
+      access: unrestricted
+    health:
+      show-details: always

@@ -71,6 +71,8 @@ dependencies {
 //    Thumbnail
     implementation 'net.coobird:thumbnailator:0.4.21'
 
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 }
 
 jacoco {

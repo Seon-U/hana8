@@ -1,14 +1,17 @@
 package com.hana8.demo.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hana8.demo.dto.MemberDTO;
+import com.hana8.demo.dto.MemberImageDTO;
+import com.hana8.demo.dto.MemberImageRequestDTO;
 import com.hana8.demo.dto.MemberSearchDTO;
 import com.hana8.demo.entity.Member;
 import com.hana8.demo.entity.MemberImage;
@@ -28,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-	private final MemberImageService memberImageService;
+	private final FileService fileService;
 
 	private final MemberRepository memberRepository;
 	private final PostRepository postRepository;
@@ -41,25 +44,13 @@ public class MemberService {
 	private final PostMapper postMapper;
 	private final DeptMapper deptMapper;
 
-	private final FileService fileService;
-
-	@Value("${member.image.path}")
-	public MemberDTO addMemberImage(Long id, MultipartFile file) {
-		Member member = repository.findById(id)
-			.orElseThrow(() ->
-				new IllegalArgumentException("Member #%d is not found!".formatted(id)));
-
-		memberImageService.saveMemberImage()
-
-	}
-
-	public int deleteImage(String imagePath) {
-	}
-	public int deleteAllImage(Long id) {
-		List<MemberImage> images = repository.findById(id).get().getImages();
-		images.stream().map(v -> v.getSavedir()
-			fileService.delete());
-	};
+	// public int deleteImage(String imagePath) {
+	// }
+	// public int deleteAllImage(Long id) {
+	// 	// List<MemberImage> images = repository.findById(id).get().getImages();
+	// 	// images.stream().map(v -> v.getSavedir()
+	// 	// 	fileService.delete());
+	// };
 	//
 	// public MemberDTO removeMemberImage(Long id, Long imageId) {}
 	//
@@ -84,6 +75,8 @@ public class MemberService {
 
 		dto.setCaptainDepts(deptMapper.toDTOList(deptRepository.findByCaptainId(id)));
 		dto.setDepts(deptMapper.toDTOList(deptRepository.findByMemberId(id)));
+
+		dto.setMemberImages(mapper.toImageDTOList(imageRepository.findByMemberId(id)));
 		return dto;
 	}
 
@@ -107,6 +100,9 @@ public class MemberService {
 	public int withdrawMember(Long id) {
 		Member oldMember = repository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Member #%d is not found!".formatted(id)));
+
+		List<MemberImage> images = imageRepository.findByMemberId(id);
+		images.forEach(mi -> fileService.delete(mi.getSavename(), mi.getSavedir()));
 
 		repository.deleteById(id);
 		return 1;
@@ -141,5 +137,41 @@ public class MemberService {
 		// return StreamSupport.stream(data.spliterator(), false).map(mapper::toDTO).toList();
 		return StreamSupport.stream(repository.findAll(bb).spliterator(),false)
 			.map(mapper::toDTO).toList();
+	}
+
+	public List<MemberImageDTO> registImages(MemberImageRequestDTO requestDTO) {
+		List<String> orgNames = requestDTO.getFiles().stream().map(MultipartFile::getOriginalFilename).toList();
+
+		String todayPath = getTodayPath();
+		List<String> saveNames = requestDTO.getFiles().stream().map(f -> fileService.upload(f, todayPath)).toList();
+
+		Member member = repository.findById(requestDTO.getMemberId())
+			.orElseThrow(() -> new IllegalArgumentException("Member not found!"));
+
+		List<MemberImage> images = new ArrayList<>();
+		for (int i = 0; i < requestDTO.getFiles().size(); i++) {
+			images.add(imageRepository.save(MemberImage.builder()
+				.member(member)
+				.orgname(orgNames.get(i))
+				.savedir(todayPath)
+				.savename(saveNames.get(i))
+				.remark(requestDTO.getRemarks().get(i))
+				.build()));
+		}
+
+		return mapper.toImageDTOList(images);
+	}
+
+	public int deleteImage(Long id) {
+		MemberImage oldImage = imageRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("MemberImage not found!"));
+		fileService.delete(oldImage.getSavename(), oldImage.getSavedir());
+		return imageRepository.deleteByImageId(id);
+	}
+
+	private String getTodayPath() {
+		LocalDateTime now = LocalDateTime.now();
+		return String.format("%4d/%02d/%02d", now.getYear(),
+			now.getMonthValue(), now.getDayOfMonth());
 	}
 }

@@ -69,9 +69,11 @@ public class Member extends BaseEntity {
 	@Builder.Default
 	private List<Dept> depts = new ArrayList<>();
 
+	//Q why Exclude?
 	@OneToMany(mappedBy = "member")
 	@Builder.Default
-	private List<MemberImage> images = new ArrayList<>();
+	@ToString.Exclude
+	private List<MemberImage> memberImages = new ArrayList<>();
 
 	public Member(Long id) {
 		this.id = id;
@@ -84,7 +86,7 @@ public class Member extends BaseEntity {
 	// private List<Reply> replies;
 
 	private void addImage(MemberImage image) {
-		this.images.add(image);
+		this.memberImages.add(image);
 		image.setMember(this);
 	}
 }
