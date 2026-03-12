@@ -33,6 +33,17 @@ public class MemberController {
 	private final MemberService service;
 	private final FileService fileService;
 
+	@PostMapping(value = "/uploadImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	MemberDTO uploadImages(@RequestParam MultipartFile file) {
+		return service.addMemberImage(file);
+	}
+
+	@DeleteMapping(value = "/deleteImage/{filename}")
+	int deleteImage(@PathVariable String filename) {
+		return service.deleteImage(filename);
+	}
+
+
 	@PostMapping(value = "/files/secure/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	ResponseEntity<String> uploadSecureFile(@RequestParam MultipartFile file) {
 		return ResponseEntity.ok(fileService.upload(file, true));
@@ -88,6 +99,7 @@ public class MemberController {
 
 	@DeleteMapping("/{id}")
 	int withdraw(@PathVariable Long id) {
+		service.deleteAllImage(Long id);
 		return service.withdrawMember(id);
 	}
 

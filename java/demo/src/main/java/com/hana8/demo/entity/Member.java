@@ -82,4 +82,9 @@ public class Member extends BaseEntity {
 	//
 	// @OneToMany(mappedBy = "replier")
 	// private List<Reply> replies;
+
+	private void addImage(MemberImage image) {
+		this.images.add(image);
+		image.setMember(this);
+	}
 }

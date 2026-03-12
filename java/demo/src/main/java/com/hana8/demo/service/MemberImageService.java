@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -19,22 +20,47 @@ import org.springframework.web.multipart.MultipartFile;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 
+import com.hana8.demo.entity.MemberImage;
+import com.hana8.demo.repository.MemberImageRepository;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class FileService {
+public class MemberImageService {
+	private final MemberImageRepository memberImageRepository;
 	@Value("${upload.path}")
 	private String uploadPath;
 
 	@Value("${upload.secure}")
 	private String securePath;
 
-	public String upload(MultipartFile file) {
-		return upload(file, false);
+	public MemberImageService(MemberImageRepository memberImageRepository) {
+		this.memberImageRepository = memberImageRepository;
 	}
 
-	public String upload(MultipartFile file, boolean isSecure) {
+	private Path getTodayPath() {
+		LocalDateTime now = LocalDateTime.now();
+		String path = String.format("%4d/%02d/%02d", now.getYear(), now.getMonthValue(), now.getDayOfMonth());
+		return Paths.get(path);
+	}
+
+	public MultipartFile saveMemberImage(MultipartFile file) {
+		String savedName = upload(file);//
+		//SET image
+		memberImageRepository.save(new MemberImage(savedName, file));
+		//TODO: upload file and save it to MemberImage Entity
+
+		return file;
+	}
+
+	public String upload(MultipartFile file) {
+		Path todayPath = getTodayPath();
+		return upload(file, todayPath);
+	}
+
+
+	public String upload(MultipartFile file, Path filePath) {
 		if (file.isEmpty() || file.getOriginalFilename() == null)
 			throw new IllegalArgumentException("파일이 비어있습니다.");
 
@@ -50,8 +76,8 @@ public class FileService {
 		// String savedFilename = UUID.randomUUID() + "_" + originalFilename";
 
 		// 저장 경로
-		Path savePath = Paths.get(isSecure ? securePath : uploadPath, savedFilename);
-		Path thumbPath = Paths.get(isSecure ? securePath : uploadPath, "thumb_" + savedFilename);
+		Path savePath = filePath.resolve(savedFilename);
+		Path thumbPath = filePath.resolve("thumb_" + savedFilename);
 		try {
 			// 디렉토리 없으면 생성
 			Files.createDirectories(savePath.getParent());
@@ -117,7 +143,4 @@ public class FileService {
 			throw new RuntimeException("파일 삭제 실패", e);
 		}
 	}
-
-
-
 }

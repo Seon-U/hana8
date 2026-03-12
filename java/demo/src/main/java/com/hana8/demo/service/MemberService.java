@@ -3,12 +3,15 @@ package com.hana8.demo.service;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hana8.demo.dto.MemberDTO;
 import com.hana8.demo.dto.MemberSearchDTO;
 import com.hana8.demo.entity.Member;
+import com.hana8.demo.entity.MemberImage;
 import com.hana8.demo.entity.QMember;
 import com.hana8.demo.mapper.DeptMapper;
 import com.hana8.demo.mapper.MemberMapper;
@@ -25,8 +28,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-	private final MemberRepository repository;
+	private final MemberImageService memberImageService;
+
+	private final MemberRepository memberRepository;
 	private final PostRepository postRepository;
+	private final MemberRepository repository;
 	private final ReplyRepository replyRepository;
 	private final DeptRepository deptRepository;
 	private final MemberImageRepository imageRepository;
@@ -35,10 +41,25 @@ public class MemberService {
 	private final PostMapper postMapper;
 	private final DeptMapper deptMapper;
 
-	// public MemberDTO addMemberImage(Long id, MemberImageDTO) {
-	// 	Member member = repository.findById(id)
-	// 		.orElseThrow(() -> new IllegalArgumentException("Member #%d is not found!".formatted(id)));
-	// }
+	private final FileService fileService;
+
+	@Value("${member.image.path}")
+	public MemberDTO addMemberImage(Long id, MultipartFile file) {
+		Member member = repository.findById(id)
+			.orElseThrow(() ->
+				new IllegalArgumentException("Member #%d is not found!".formatted(id)));
+
+		memberImageService.saveMemberImage()
+
+	}
+
+	public int deleteImage(String imagePath) {
+	}
+	public int deleteAllImage(Long id) {
+		List<MemberImage> images = repository.findById(id).get().getImages();
+		images.stream().map(v -> v.getSavedir()
+			fileService.delete());
+	};
 	//
 	// public MemberDTO removeMemberImage(Long id, Long imageId) {}
 	//
